@@ -1,4 +1,5 @@
 import pygame
+from settings import PLAYER_SPEED
 
 # How long (in milliseconds) each animation frame stays on screen before
 # switching to the next one. 100 ms = 10 animation frames per second.
@@ -19,17 +20,27 @@ class Player(pygame.sprite.Sprite):
         # The current animation is a list of file paths to the PNG frames.
         self.animation = animator.idle_camerafacing()
         # Load every frame ONCE here, not every frame in the main loop.
-        # pygame.image.load() returns a Surface (a grid of pixels we can draw).
-        # convert_alpha() keeps the transparent edges and makes blitting fast.
+        # pygame.image.load() returns a Surface; convert_alpha() keeps the
+        # transparent edges and makes blitting fast.
         self.frames = [pygame.image.load(path).convert_alpha() for path in self.animation]
-        # Which frame we are currently showing (an index into self.frames).
         self.frame_index = 0
         # The time (in ms, from pygame.time.get_ticks()) we last switched frames.
         self.update_time = 0
 
+        # Facing + movement state. We only swap animations when one of these
+        # actually changes, so we don't reload frames from disk every frame.
+        self.facing = "camera_facing"
+        self.moving = False
+        # When moving right we mirror the (left-facing) side art for now. Swap
+        # this for real right-facing art when those frames are ready.
+        self.flip_x = False
+
         # A pygame sprite needs .image (the picture) and .rect (its position).
-        self.image = self.frames[self.frame_index]
-        self.rect = self.image.get_rect(center=pos)
+        # We keep a float position so small per-frame movement does not get
+        # rounded away, then sync the rect to it.
+        self.pos = pygame.Vector2(pos)
+        self.image = self._current_image()
+        self.rect = self.image.get_rect(center=self.pos)
 
     def get_animation(self):
         return self.animation
@@ -38,28 +49,84 @@ class Player(pygame.sprite.Sprite):
         """Return the Surface for the frame we are currently on."""
         return self.image
 
+    def _current_image(self):
+        """The current frame, mirrored horizontally if facing right."""
+        img = self.frames[self.frame_index]
+        if self.flip_x:
+            img = pygame.transform.flip(img, True, False)
+        return img
+
     def update_animation(self):
         """Move to the next frame if enough time has passed since the last switch."""
-        # pygame.time.get_ticks() gives the number of ms since pygame.init().
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
             self.update_time = pygame.time.get_ticks()
             self.frame_index += 1
             # If we've gone past the last frame, loop back to the first.
             if self.frame_index >= len(self.frames):
                 self.frame_index = 0
-            # Keep .image in sync with the new frame index.
-            self.image = self.frames[self.frame_index]
+            self.image = self._current_image()
+
+    def move(self, dt, keys):
+        """Move the ant based on held keys and keep its facing/animation in sync.
+
+        dt is delta time in seconds; multiplying speed by dt keeps the speed the
+        same no matter the frame rate. keys is the list from pygame.key.get_pressed().
+        """
+        # Read direction from the arrow keys (WASD works too).
+        dx = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) \
+           - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
+        dy = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) \
+           - int(keys[pygame.K_UP] or keys[pygame.K_w])
+
+        direction = pygame.Vector2(dx, dy)
+        if direction.length_squared() > 0:
+            # Normalise so diagonal movement is not faster than straight movement.
+            direction = direction.normalize()
+            self.pos += direction * PLAYER_SPEED * dt
+            self.rect.center = self.pos
+            new_moving = True
+        else:
+            new_moving = False
+
+        # Pick a facing from the dominant axis. Vertical wins for diagonals, so
+        # the ant is seen from behind (up) or front (down) when moving diagonally.
+        if dy < 0:
+            new_facing, new_flip = "forward_facing", False
+        elif dy > 0:
+            new_facing, new_flip = "camera_facing", False
+        elif dx < 0:
+            new_facing, new_flip = "left_facing", False
+        elif dx > 0:
+            new_facing, new_flip = "right_facing", False
+        else:
+            # No keys held: keep the last facing so the idle pose still matches.
+            new_facing, new_flip = self.facing, self.flip_x
+
+        # Only swap animations when facing or moving state actually changes,
+        # otherwise we would reload the PNGs from disk every frame.
+        if (new_moving, new_facing, new_flip) != (self.moving, self.facing, self.flip_x):
+            self.moving = new_moving
+            self.facing = new_facing
+            self.flip_x = new_flip
+            if new_moving:
+                self.set_animator_run(new_facing)
+            else:
+                self.set_animator_idle(new_facing)
 
     def _reload_frames(self, paths):
-        """Reload frames for a new animation without moving the player."""
-        # Remember where the player is so switching animations (which may have a
-        # different frame size) doesn't make it jump to a new spot.
-        center = self.rect.center
+        """Reload frames for a new animation without moving the player.
+
+        self.pos is the source of truth for the player's position (kept as a
+        float so small per-frame movement is not lost). The rect is just a
+        rounded view of it, so we re-centre the rect on self.pos rather than
+        snapping self.pos back to the rounded rect.
+        """
         self.frames = [pygame.image.load(path).convert_alpha() for path in paths]
         self.frame_index = 0
         self.update_time = 0
-        self.image = self.frames[self.frame_index]
-        self.rect = self.image.get_rect(center=center)
+        self.image = self._current_image()
+        # Recentre the rect on the existing position; do not move the player.
+        self.rect = self.image.get_rect(center=self.pos)
 
     def set_animator_idle(self, facing):
         """Switch to a different idle animation based on which way the ant faces."""
@@ -67,8 +134,11 @@ class Player(pygame.sprite.Sprite):
             self.animation = self.animator.idle_camerafacing()
         elif facing == "forward_facing":
             self.animation = self.animator.idle_forward()
-        elif facing == "side_facing":
+        elif facing == "left_facing":
             self.animation = self.animator.idle_left()
+        elif facing == "right_facing":
+            self.animation = self.animator.idle_right()
+            
         self._reload_frames(self.animation)
 
     def set_animator_run(self, facing):
@@ -77,6 +147,8 @@ class Player(pygame.sprite.Sprite):
             self.animation = self.animator.run_camerafacing()
         elif facing == "forward_facing":
             self.animation = self.animator.run_forward()
-        elif facing == "side_facing":
+        elif facing == "left_facing":
             self.animation = self.animator.run_left()
+        elif facing == "right_facing":
+            self.animation = self.animator.run_right()
         self._reload_frames(self.animation)

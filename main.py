@@ -33,8 +33,8 @@ for sprite in current_map.get_sprites():
 # Main game engine loop
 # -------------------------------------------------------------------------------------------
 while running:
-    # dt is delta time in seconds. Movement should use this so speed does not
-    # depend on the frame rate.
+    # dt is delta time in seconds. Movement uses this so speed does not depend
+    # on the frame rate.
     dt = clock.tick(FPS) / 1000
 
     # poll for events
@@ -42,22 +42,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # KEYDOWN fires once the moment a key is pressed, not every frame while
-        # it is held, so switching facing here happens once per press (no flag needed).
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.set_animator_run(facing="forward_facing")
-            elif event.key == pygame.K_DOWN:
-                player.set_animator_run(facing="camera_facing")
-            elif event.key == pygame.K_LEFT:
-                player.set_animator_run(facing="side_facing")
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                player.set_animator_idle(facing="forward_facing")
-            elif event.key == pygame.K_DOWN:
-                player.set_animator_idle(facing="camera_facing")
-            elif event.key == pygame.K_LEFT:
-                player.set_animator_idle(facing="side_facing")
+
+    # Read the keyboard state every frame and pass it to the player. Holding a
+    # key moves continuously; the player switches to run while held and idle on
+    # release. Movement logic lives in player_obj, so the loop stays short.
+    keys = pygame.key.get_pressed()
+    player.move(dt, keys)
 
     # fill the screen with a colour to wipe away anything from last frame
     screen.fill(BG_COLOR)
