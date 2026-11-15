@@ -29,8 +29,6 @@ def generate_envrionment_obj():
         "tree",
         "rock",
         "bush",
-        "pile_of_leaves",
-        "spider_web",
         "box",
     ]
 
