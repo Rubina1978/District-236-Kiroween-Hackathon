@@ -34,6 +34,13 @@ while running:
         # it is held, so switching facing here happens once per press (no flag needed).
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
+                player.set_animator_run(facing="forward_facing")
+            elif event.key == pygame.K_DOWN:
+                player.set_animator_run(facing="camera_facing")
+            elif event.key == pygame.K_LEFT:
+                player.set_animator_run(facing="side_facing")
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
                 player.set_animator_idle(facing="forward_facing")
             elif event.key == pygame.K_DOWN:
                 player.set_animator_idle(facing="camera_facing")

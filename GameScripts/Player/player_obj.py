@@ -49,3 +49,17 @@ class Player:
         self.frames = [pygame.image.load(path).convert_alpha() for path in self.animation]
         self.frame_index = 0
         self.update_time = 0
+    
+    def set_animator_run(self, facing):
+        """Switch to a different idle animation based on which way the ant faces."""
+        if facing == "camera_facing":
+            self.animation = self.animator.run_camerafacing()
+        elif facing == "forward_facing":
+            self.animation = self.animator.run_forward()
+        elif facing == "side_facing":
+            self.animation = self.animator.run_left()
+
+        # Reload frames for the new animation and restart from the first frame.
+        self.frames = [pygame.image.load(path).convert_alpha() for path in self.animation]
+        self.frame_index = 0
+        self.update_time = 0

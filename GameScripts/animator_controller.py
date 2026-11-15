@@ -16,19 +16,28 @@ player_idle_left = [
     "DylanFiles/Artwork/Characters/Player/Idle/Left/sprite_idle_left3.png"
 ]
 player_run_camerafacing = [
-    "",
+    "DylanFiles/Artwork/Characters/Player/Run/Camera/sprite_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Camera/sprite_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Camera/sprite_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Camera/sprite_run3.png"
 ]
 player_run_forward = [
-    "",
+    "DylanFiles/Artwork/Characters/Player/Run/Forward/sprite_run_forward0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Forward/sprite_run_forward1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Forward/sprite_run_forward2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Forward/sprite_run_forward3.png"
 ]
 player_run_left = [
-    "",
+    "DylanFiles/Artwork/Characters/Player/Run/Left/sprite_run_left0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Left/sprite_run_left1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Left/sprite_run_left2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/Left/sprite_run_left3.png"
 ]
 
 def animator_interface(type):
     """ Function for selecting animators """
     
     if type == "player":
-        return PlayerAnimator(player_idle_camerafacing=player_idle_camerafacing, player_idle_forward=player_idle_forward, player_idle_left=player_idle_left)
+        return PlayerAnimator(player_idle_camerafacing=player_idle_camerafacing, player_idle_forward=player_idle_forward, player_idle_left=player_idle_left, player_run_camerafacing=player_run_camerafacing, player_run_forward=player_run_forward, player_run_left=player_run_left)
 
     return 0
