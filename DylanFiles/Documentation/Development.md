@@ -15,3 +15,13 @@
 
 ### How the Environment grid map is coming out so far
 ![alt text](image-1.png)
+
+---
+
+### Recently Acquired an asset pack
+- Cardboard Boxes by DANI MACCARI
+- I took one cardboard box and animated the box as if it was opening
+- I used a lightweight pixel art studio known as 'Piskel'
+
+### Alongside finding asset packs
+- I created my own ant character with idle and run animations
