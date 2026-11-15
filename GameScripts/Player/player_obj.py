@@ -5,8 +5,16 @@ import pygame
 ANIMATION_COOLDOWN = 100
 
 
-class Player:
-    def __init__(self, animator):
+class Player(pygame.sprite.Sprite):
+    """The ant the player controls.
+
+    Extends pygame.sprite.Sprite so it has .image and .rect and can be added
+    to the same sprite group as the environment for y-sorting.
+    """
+
+    def __init__(self, animator, pos):
+        # Call the parent Sprite constructor first.
+        super().__init__()
         self.animator = animator
         # The current animation is a list of file paths to the PNG frames.
         self.animation = animator.idle_camerafacing()
@@ -19,12 +27,16 @@ class Player:
         # The time (in ms, from pygame.time.get_ticks()) we last switched frames.
         self.update_time = 0
 
+        # A pygame sprite needs .image (the picture) and .rect (its position).
+        self.image = self.frames[self.frame_index]
+        self.rect = self.image.get_rect(center=pos)
+
     def get_animation(self):
         return self.animation
 
     def get_current_frame(self):
         """Return the Surface for the frame we are currently on."""
-        return self.frames[self.frame_index]
+        return self.image
 
     def update_animation(self):
         """Move to the next frame if enough time has passed since the last switch."""
@@ -35,6 +47,19 @@ class Player:
             # If we've gone past the last frame, loop back to the first.
             if self.frame_index >= len(self.frames):
                 self.frame_index = 0
+            # Keep .image in sync with the new frame index.
+            self.image = self.frames[self.frame_index]
+
+    def _reload_frames(self, paths):
+        """Reload frames for a new animation without moving the player."""
+        # Remember where the player is so switching animations (which may have a
+        # different frame size) doesn't make it jump to a new spot.
+        center = self.rect.center
+        self.frames = [pygame.image.load(path).convert_alpha() for path in paths]
+        self.frame_index = 0
+        self.update_time = 0
+        self.image = self.frames[self.frame_index]
+        self.rect = self.image.get_rect(center=center)
 
     def set_animator_idle(self, facing):
         """Switch to a different idle animation based on which way the ant faces."""
@@ -44,22 +69,14 @@ class Player:
             self.animation = self.animator.idle_forward()
         elif facing == "side_facing":
             self.animation = self.animator.idle_left()
+        self._reload_frames(self.animation)
 
-        # Reload frames for the new animation and restart from the first frame.
-        self.frames = [pygame.image.load(path).convert_alpha() for path in self.animation]
-        self.frame_index = 0
-        self.update_time = 0
-    
     def set_animator_run(self, facing):
-        """Switch to a different idle animation based on which way the ant faces."""
+        """Switch to a different run animation based on which way the ant faces."""
         if facing == "camera_facing":
             self.animation = self.animator.run_camerafacing()
         elif facing == "forward_facing":
             self.animation = self.animator.run_forward()
         elif facing == "side_facing":
             self.animation = self.animator.run_left()
-
-        # Reload frames for the new animation and restart from the first frame.
-        self.frames = [pygame.image.load(path).convert_alpha() for path in self.animation]
-        self.frame_index = 0
-        self.update_time = 0
+        self._reload_frames(self.animation)
