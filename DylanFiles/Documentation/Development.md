@@ -15,3 +15,21 @@
 
 ### How the Environment grid map is coming out so far
 ![alt text](image-1.png)
+
+---
+
+### Recently Acquired an asset pack
+- Cardboard Boxes by DANI MACCARI
+- I took one cardboard box and animated the box as if it was opening
+- I used a lightweight pixel art studio known as 'Piskel'
+
+### Alongside finding asset packs
+- I created my own ant character with idle and run animations
+
+---
+
+# Back to Kiro
+### I had some help from free Kiro AI to help me with animations.
+- It shows an explanation of why my method was not working, and the AI put my code on the Player class instead.
+- The first animation implementation is working in main.py
+![alt text](image-2.png)
