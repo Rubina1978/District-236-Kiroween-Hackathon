@@ -33,9 +33,8 @@ def generate_envrionment_obj():
     ]
 
     random_type = random.choice(obj_type_array)
-    random_artwork = f"{random_type}_1"
 
-    obj = EnvrionmentObject(type=random_type, artwork=random_artwork)
+    obj = EnvrionmentObject(type=random_type, artwork=random_type)
     return obj
 
 build_environment()

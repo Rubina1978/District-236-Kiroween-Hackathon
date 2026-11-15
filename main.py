@@ -19,6 +19,8 @@ player = Player(animator=animator_interface(type="player"))
 player_sprite_rect = player.get_current_frame().get_rect()
 player_sprite_rect.center = (player_pos.x, player_pos.y)
 
+current_map = world_build()
+
 # -------------------------------------------------------------------------------------------
 # Main game engine loop
 # -------------------------------------------------------------------------------------------
