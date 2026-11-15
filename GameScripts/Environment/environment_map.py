@@ -26,15 +26,16 @@ def generate_envrionment_obj():
     """ Function for quick envrionment obj generation """
 
     obj_type_array = [
-        "autumn_tree",
+        "tree",
         "rock",
         "bush",
         "pile_of_leaves",
         "spider_web",
+        "box",
     ]
 
     random_type = random.choice(obj_type_array)
-    random_artwork = f"{random_type}_{random.randint(1, 4)}"
+    random_artwork = f"{random_type}_1"
 
     obj = EnvrionmentObject(type=random_type, artwork=random_artwork)
     return obj

@@ -24,4 +24,7 @@ while running:
 # flip() the display to put work on screen
 
     pygame.display.flip()
+
+    # Dylan just testing - I'm not sure what is happening here yet
+    # environment_map = world_build()
 pygame.quit()
