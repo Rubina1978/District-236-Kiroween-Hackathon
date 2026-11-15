@@ -1,11 +1,11 @@
 from .environment_obj import EnvrionmentObject
-import random
+import random, math
 
 def build_environment(rows=18, cols=32):
     """Return a rows x cols grid filled with 0 (empty)."""
     environment_map = [[0 for _ in range(cols)] for _ in range(rows)]
 
-    for _ in range((rows * cols)):
+    for _ in range(math.floor((rows * cols) / 2)):
         r, c = random.randrange(18), random.randrange(32)
         environment_map[r][c] = generate_envrionment_obj()
 

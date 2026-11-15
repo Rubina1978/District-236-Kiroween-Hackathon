@@ -52,6 +52,8 @@ while running:
 # fill the screen with a color to wipe away anything from last frame
     screen.fill((35, 75, 45))
 
+    current_map.draw(screen=screen)
+
 # Advance the player's animation and draw the current frame.
     player.update_animation()
     screen.blit(player.get_current_frame(), player_sprite_rect)
