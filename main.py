@@ -1,4 +1,6 @@
 from GameScripts.world_builder import world_build
+from GameScripts.Player.player_obj import Player
+from GameScripts.animator_controller import animator_interface
 import pygame
 
 pygame.init()
