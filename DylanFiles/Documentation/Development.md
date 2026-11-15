@@ -25,3 +25,11 @@
 
 ### Alongside finding asset packs
 - I created my own ant character with idle and run animations
+
+---
+
+# Back to Kiro
+### I had some help from free Kiro AI to help me with animations.
+- It shows an explanation of why my method was not working, and the AI put my code on the Player class instead.
+- The first animation implementation is working in main.py
+![alt text](image-2.png)

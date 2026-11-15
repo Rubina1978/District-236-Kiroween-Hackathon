@@ -1,4 +1,4 @@
-from environment_obj import EnvrionmentObject
+from .environment_obj import EnvrionmentObject
 import random
 
 def build_environment(rows=18, cols=32):
