@@ -9,44 +9,44 @@ player_idle_camerafacing = [
     "DylanFiles/Artwork/Characters/Player/Idle/Idle/sprite_idle1.png"
 ]
 player_idle_forward = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleForward/sprite_idle_forward0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleForward/sprite_idle_forward1.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleForward/sprite_forward_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleForward/sprite_forward_idle1.png"
 ]
 player_idle_left = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_left_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_left_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_left_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_left_idle3.png"
 ]
 player_idle_leftTop = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftTOP/sprite_leftTop_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftTOP/sprite_leftTop_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftTOP/sprite_leftTop_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftTOP/sprite_leftTop_idle3.png"
 ]
 player_idle_leftBottom = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeft/sprite_idle_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftBOTTOM/sprite_leftBottom_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftBOTTOM/sprite_leftBottom_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftBOTTOM/sprite_leftBottom_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleLeftBOTTOM/sprite_leftBottom_idle3.png"
 ]
 player_idle_right = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_right_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_right_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_right_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_right_idle3.png"
 ]
 player_idle_rightTop = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightTOP/sprite_rightTop_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightTOP/sprite_rightTop_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightTOP/sprite_rightTop_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightTOP/sprite_rightTop_idle3.png"
 ]
 player_idle_rightBottom = [
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Idle/IdleRight/sprite_idle_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightBOTTOM/sprite_rightBottom_idle0.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightBOTTOM/sprite_rightBottom_idle1.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightBOTTOM/sprite_rightBottom_idle2.png",
+    "DylanFiles/Artwork/Characters/Player/Idle/IdleRightBOTTOM/sprite_rightBottom_idle3.png"
 ]
 player_run_camerafacing = [
     "DylanFiles/Artwork/Characters/Player/Run/Run/sprite_run0.png",
@@ -55,46 +55,46 @@ player_run_camerafacing = [
     "DylanFiles/Artwork/Characters/Player/Run/Run/sprite_run3.png"
 ]
 player_run_forward = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_run_forward0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_run_forward1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_run_forward2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_run_forward3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_forward_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_forward_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_forward_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunForward/sprite_forward_run3.png"
 ]
 player_run_left = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_left_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_left_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_left_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_left_run3.png"
 ]
 player_run_leftTop = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftTOP/sprite_leftTop_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftTOP/sprite_leftTop_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftTOP/sprite_leftTop_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftTOP/sprite_leftTop_run3.png"
 ]
 player_run_leftBottom = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunLeft/sprite_run_left3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftBOTTOM/sprite_leftBottom_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftBOTTOM/sprite_leftBottom_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftBOTTOM/sprite_leftBottom_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunLeftBOTTOM/sprite_leftBottom_run3.png"
 ]
 player_run_right = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_right_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_right_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_right_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_right_run3.png"
 ]
 player_run_rightTop = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightTOP/sprite_rightTop_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightTOP/sprite_rightTop_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightTOP/sprite_rightTop_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightTOP/sprite_rightTop_run3.png"
 ]
 player_run_rightBottom = [
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right0.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right1.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right2.png",
-    "DylanFiles/Artwork/Characters/Player/Run/RunRight/sprite_run_right3.png"
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightBOTTOM/sprite_rightBottom_run0.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightBOTTOM/sprite_rightBottom_run1.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightBOTTOM/sprite_rightBottom_run2.png",
+    "DylanFiles/Artwork/Characters/Player/Run/RunRightBOTTOM/sprite_rightBottom_run3.png"
 ]
 
 # New lists for shooting animations in all 8 directions
@@ -263,4 +263,4 @@ def animator_interface(type):
             spider_rightBottom_facing = spider_rightBottom_facing,
             spider_rightTop_facing = spider_rightTop_facing
         )
-return 0
+    return 0

@@ -88,19 +88,30 @@ class Player(pygame.sprite.Sprite):
         else:
             new_moving = False
 
-        # Pick a facing from the dominant axis. Vertical wins for diagonals, so
-        # the ant is seen from behind (up) or front (down) when moving diagonally.
-        if dy < 0:
+        # Pick a facing from the movement direction.
+        # Diagonals (both axes pressed) must be checked FIRST. An up-left press
+        # also has dy < 0, so if we checked "forward" first the diagonal branch
+        # would never be reached. With diagonals first, the cardinals below only
+        # match when exactly one axis is pressed.
+        if dx == 0 and dy == 0:
+            # No keys held: keep the last facing so the idle pose still matches.
+            new_facing, new_flip = self.facing, self.flip_x
+        elif dx < 0 and dy < 0:
+            new_facing, new_flip = "leftTop_facing", False
+        elif dx > 0 and dy < 0:
+            new_facing, new_flip = "rightTop_facing", False
+        elif dx < 0 and dy > 0:
+            new_facing, new_flip = "leftBottom_facing", False
+        elif dx > 0 and dy > 0:
+            new_facing, new_flip = "rightBottom_facing", False
+        elif dy < 0:
             new_facing, new_flip = "forward_facing", False
         elif dy > 0:
             new_facing, new_flip = "camera_facing", False
         elif dx < 0:
             new_facing, new_flip = "left_facing", False
-        elif dx > 0:
+        else:  # dx > 0
             new_facing, new_flip = "right_facing", False
-        else:
-            # No keys held: keep the last facing so the idle pose still matches.
-            new_facing, new_flip = self.facing, self.flip_x
 
         # Only swap animations when facing or moving state actually changes,
         # otherwise we would reload the PNGs from disk every frame.
@@ -136,8 +147,16 @@ class Player(pygame.sprite.Sprite):
             self.animation = self.animator.idle_forward()
         elif facing == "left_facing":
             self.animation = self.animator.idle_left()
+        elif facing == "leftBottom_facing":
+            self.animation = self.animator.idle_leftBottom()
+        elif facing == "leftTop_facing":
+            self.animation = self.animator.idle_leftTop()
         elif facing == "right_facing":
             self.animation = self.animator.idle_right()
+        elif facing == "rightBottom_facing":
+            self.animation = self.animator.idle_rightBottom()
+        elif facing == "rightTop_facing":
+            self.animation = self.animator.idle_rightTop()
             
         self._reload_frames(self.animation)
 
@@ -149,6 +168,14 @@ class Player(pygame.sprite.Sprite):
             self.animation = self.animator.run_forward()
         elif facing == "left_facing":
             self.animation = self.animator.run_left()
+        elif facing == "leftBottom_facing":
+            self.animation = self.animator.run_leftBottom()
+        elif facing == "leftTop_facing":
+            self.animation = self.animator.run_leftTop()
         elif facing == "right_facing":
             self.animation = self.animator.run_right()
+        elif facing == "rightBottom_facing":
+            self.animation = self.animator.run_rightBottom()
+        elif facing == "rightTop_facing":
+            self.animation = self.animator.run_rightTop()
         self._reload_frames(self.animation)

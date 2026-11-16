@@ -33,3 +33,8 @@
 - It shows an explanation of why my method was not working, and the AI put my code on the Player class instead.
 - The first animation implementation is working in main.py
 ![alt text](image-2.png)
+
+### When developing 8 directions worth of spites
+- I had to ask Kiro to implement animation triggers depending upon 8 different directions. I did not know how Kiro implementing the animation triggers so I ask for help. 
+- Below is Kiro's implementation
+![alt text](image-3.png)

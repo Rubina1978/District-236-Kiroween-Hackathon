@@ -15,7 +15,15 @@ class PlayerAnimator:
             player_run_leftTop,
             player_run_rightBottom,
             player_run_rightTop,
-            player_run_right
+            player_run_right,
+            player_shoot_camera,
+            player_shoot_forward,
+            player_shoot_left,
+            player_shoot_leftBottom,
+            player_shoot_leftTop,
+            player_shoot_right,
+            player_shoot_rightBottom,
+            player_shoot_rightTop
         ):
 
         self.player_idle_camerafacing = player_idle_camerafacing
@@ -33,7 +41,7 @@ class PlayerAnimator:
         self.player_run_leftTop = player_run_leftTop
         self.player_run_right = player_run_right
         self.player_run_rightBottom = player_run_rightBottom
-        self.player_run_rightBottom = player_run_rightTop
+        self.player_run_rightTop = player_run_rightTop
     
     def idle_left(self):
         return self.player_idle_left
@@ -82,3 +90,27 @@ class PlayerAnimator:
     
     def run_rightTop(self):
         return self.player_run_rightTop
+
+    def shoot_camerafacing(self):
+        return self.player_shoot_camera
+    
+    def shoot_forward(self):
+        return self.player_shoot_forward
+    
+    def shoot_right(self):
+        return self.player_shoot_right
+    
+    def shoot_rightBottom(self):
+        return self.player_shoot_rightBottom
+    
+    def shoot_rightTop(self):
+        return self.player_shoot_rightTop
+    
+    def shoot_left(self):
+        return self.player_shoot_left
+    
+    def shoot_leftBottom(self):
+        return self.player_shoot_leftBottom
+    
+    def shoot_leftTop(self):
+        return self.player_shoot_leftTop
