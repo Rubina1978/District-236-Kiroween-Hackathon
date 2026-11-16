@@ -20,9 +20,9 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
         if self.type == "box":
-            path = f"DylanFiles/Artwork/Environment/Objects/Box/{self.type}_1.png"
+            path = f"Assets/Artwork/Environment/Objects/Box/{self.type}_1.png"
         else:
-            path = f"DylanFiles/Artwork/Environment/Scenery/{self.type}.png"
+            path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
         self.image = pygame.image.load(path).convert_alpha()
         # rect is where the sprite sits in the world. x, y come from its grid
