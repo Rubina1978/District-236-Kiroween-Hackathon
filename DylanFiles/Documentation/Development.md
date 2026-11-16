@@ -38,3 +38,7 @@
 - I had to ask Kiro to implement animation triggers depending upon 8 different directions. I did not know how Kiro implementing the animation triggers so I ask for help. 
 - Below is Kiro's implementation
 ![alt text](image-3.png)
+
+### I also had kiro help implement the shoot function
+- This only triggers the animation it doesn't include actual shooting logic just yet
+![alt text](image-4.png)
