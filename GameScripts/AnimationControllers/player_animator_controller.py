@@ -42,6 +42,14 @@ class PlayerAnimator:
         self.player_run_right = player_run_right
         self.player_run_rightBottom = player_run_rightBottom
         self.player_run_rightTop = player_run_rightTop
+        self.player_shoot_camera = player_shoot_camera
+        self.player_shoot_forward = player_shoot_forward
+        self.player_shoot_left = player_shoot_left
+        self.player_shoot_leftBottom = player_shoot_leftBottom
+        self.player_shoot_leftTop = player_shoot_leftTop
+        self.player_shoot_right = player_shoot_right
+        self.player_shoot_rightBottom = player_shoot_rightBottom
+        self.player_shoot_rightTop = player_shoot_rightTop
     
     def idle_left(self):
         return self.player_idle_left

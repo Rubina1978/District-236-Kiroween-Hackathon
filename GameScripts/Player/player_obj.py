@@ -31,6 +31,9 @@ class Player(pygame.sprite.Sprite):
         # actually changes, so we don't reload frames from disk every frame.
         self.facing = "camera_facing"
         self.moving = False
+        # True while the player is shooting. Like moving, this is part of the
+        # state we compare, so the animation only swaps when it actually changes.
+        self.shooting = False
         # When moving right we mirror the (left-facing) side art for now. Swap
         # this for real right-facing art when those frames are ready.
         self.flip_x = False
@@ -78,6 +81,12 @@ class Player(pygame.sprite.Sprite):
         dy = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) \
            - int(keys[pygame.K_UP] or keys[pygame.K_w])
 
+        # Shooting: is the left mouse button held? pygame.mouse.get_pressed()
+        # returns a tuple (left, middle, right) of booleans, so [0] is the left
+        # button. keys only holds KEYBOARD state, so it cannot tell us about the
+        # mouse - that is why keys[MOUSEBUTTONDOWN] never returned True here.
+        shooting = pygame.mouse.get_pressed()[0]
+
         direction = pygame.Vector2(dx, dy)
         if direction.length_squared() > 0:
             # Normalise so diagonal movement is not faster than straight movement.
@@ -113,13 +122,18 @@ class Player(pygame.sprite.Sprite):
         else:  # dx > 0
             new_facing, new_flip = "right_facing", False
 
-        # Only swap animations when facing or moving state actually changes,
-        # otherwise we would reload the PNGs from disk every frame.
-        if (new_moving, new_facing, new_flip) != (self.moving, self.facing, self.flip_x):
+        # Only swap animations when the shooting/moving/facing state actually
+        # changes, otherwise we would reload the PNGs from disk every frame.
+        # Shooting takes priority: while shooting you see the shoot pose even
+        # if you are also moving; otherwise run while moving, else idle.
+        if (shooting, new_moving, new_facing, new_flip) != (self.shooting, self.moving, self.facing, self.flip_x):
+            self.shooting = shooting
             self.moving = new_moving
             self.facing = new_facing
             self.flip_x = new_flip
-            if new_moving:
+            if shooting:
+                self.set_animator_shoot(new_facing)
+            elif new_moving:
                 self.set_animator_run(new_facing)
             else:
                 self.set_animator_idle(new_facing)
@@ -141,6 +155,7 @@ class Player(pygame.sprite.Sprite):
 
     def set_animator_idle(self, facing):
         """Switch to a different idle animation based on which way the ant faces."""
+
         if facing == "camera_facing":
             self.animation = self.animator.idle_camerafacing()
         elif facing == "forward_facing":
@@ -162,6 +177,7 @@ class Player(pygame.sprite.Sprite):
 
     def set_animator_run(self, facing):
         """Switch to a different run animation based on which way the ant faces."""
+        
         if facing == "camera_facing":
             self.animation = self.animator.run_camerafacing()
         elif facing == "forward_facing":
@@ -178,4 +194,25 @@ class Player(pygame.sprite.Sprite):
             self.animation = self.animator.run_rightBottom()
         elif facing == "rightTop_facing":
             self.animation = self.animator.run_rightTop()
+        self._reload_frames(self.animation)
+    
+    def set_animator_shoot(self, facing):
+        """Switch to a different run animation based on which way the ant faces."""
+
+        if facing == "camera_facing":
+            self.animation = self.animator.shoot_camerafacing()
+        elif facing == "forward_facing":
+            self.animation = self.animator.shoot_forward()
+        elif facing == "left_facing":
+            self.animation = self.animator.shoot_left()
+        elif facing == "leftBottom_facing":
+            self.animation = self.animator.shoot_leftBottom()
+        elif facing == "leftTop_facing":
+            self.animation = self.animator.shoot_leftTop()
+        elif facing == "right_facing":
+            self.animation = self.animator.shoot_right()
+        elif facing == "rightBottom_facing":
+            self.animation = self.animator.shoot_rightBottom()
+        elif facing == "rightTop_facing":
+            self.animation = self.animator.shoot_rightTop()
         self._reload_frames(self.animation)
