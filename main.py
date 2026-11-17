@@ -13,7 +13,7 @@ running = True
 pygame.display.set_caption("Point 236 (Kota 236)")
 
 # Start the player in the middle of the screen.
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())
 
 # Load Player & set position.
 # Player loads all of its animation frames once when it is created.
@@ -22,6 +22,7 @@ player = Player(animator=animator_interface(type="player"), pos=player_pos)
 # Build the world (a grid of environment objects).
 current_map = world_build(False)
 tile_map = world_build(True)
+boundaries = []
 
 # Camera group with y-sorting: the player and the environment are drawn together
 # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
@@ -33,6 +34,16 @@ for sprite in current_map.get_sprites():
 
 for sprite in tile_map.get_sprites():
     camera_group.ground_sprites.add(sprite)
+
+for row in tile_map.grid:
+    for obj in row:
+
+        if obj != 0 and obj.get_boundary():
+            boundaries.append(obj)
+# for obj in tile_map:
+#     if obj.get_boundary() == True:
+#         boundaries.append(obj)
+
 
 # -------------------------------------------------------------------------------------------
 # Main game engine loop
@@ -52,7 +63,14 @@ while running:
     # key moves continuously; the player switches to run while held and idle on
     # release. Movement logic lives in player_obj, so the loop stays short.
     keys = pygame.key.get_pressed()
-    player.move(dt, keys)
+
+    # for boundary in boundaries:
+    #     if player.is_near(boundary):
+    #         print("you are near boundary")
+    #         player.push_back(boundary)
+    
+    player.move(dt, keys, boundaries)
+    
 
     # fill the screen with a colour to wipe away anything from last frame
     screen.fill(BG_COLOR)

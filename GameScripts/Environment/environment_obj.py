@@ -17,6 +17,7 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         super().__init__()
         self.type = type
         self.artwork = artwork
+        self.is_boundary = False
 
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
@@ -57,7 +58,7 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 
     def give_loot(self):
         items = [
-            "junk",
+            "ammo",
             "spider",
             "health"
         ]
@@ -65,3 +66,8 @@ class EnvrionmentObject(pygame.sprite.Sprite):
             return random.choice(items)
         else:
             return 0
+    
+    def set_boundary(self):
+        self.is_boundary = True
+    def get_boundary(self):
+        return self.is_boundary

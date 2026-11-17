@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
                 self.frame_index = 0
             self.image = self._current_image()
 
-    def move(self, dt, keys):
+    def move(self, dt, keys, boundaries):
         """Move the ant based on held keys and keep its facing/animation in sync.
 
         dt is delta time in seconds; multiplying speed by dt keeps the speed the
@@ -89,11 +89,28 @@ class Player(pygame.sprite.Sprite):
 
         direction = pygame.Vector2(dx, dy)
         if direction.length_squared() > 0:
-            # Normalise so diagonal movement is not faster than straight movement.
             direction = direction.normalize()
-            self.pos += direction * PLAYER_SPEED * dt
-            self.rect.center = self.pos
+
+            # Move horizontally first
+            old_x = self.pos.x
+            self.pos.x += direction.x * PLAYER_SPEED * dt
+            self.rect.centerx = round(self.pos.x)
+
+            if self.check_collision(boundaries):
+                self.pos.x = old_x
+                self.rect.centerx = round(self.pos.x)
+
+            # Then move vertically
+            old_y = self.pos.y
+            self.pos.y += direction.y * PLAYER_SPEED * dt
+            self.rect.centery = round(self.pos.y)
+
+            if self.check_collision(boundaries):
+                self.pos.y = old_y
+                self.rect.centery = round(self.pos.y)
+
             new_moving = True
+
         else:
             new_moving = False
 
@@ -137,6 +154,7 @@ class Player(pygame.sprite.Sprite):
                 self.set_animator_run(new_facing)
             else:
                 self.set_animator_idle(new_facing)
+        
 
     def _reload_frames(self, paths):
         """Reload frames for a new animation without moving the player.
@@ -216,3 +234,19 @@ class Player(pygame.sprite.Sprite):
         elif facing == "rightTop_facing":
             self.animation = self.animator.shoot_rightTop()
         self._reload_frames(self.animation)
+
+    def is_near(self, obj, distance=1):
+
+        player_pos = pygame.Vector2(self.rect.center)
+        object_pos = pygame.Vector2(obj.rect.midbottom)
+
+        return player_pos.distance_to(object_pos) <= distance
+    
+    def check_collision(self, boundaries):
+
+        for boundary in boundaries:
+
+            if self.rect.colliderect(boundary.rect):
+                return True
+
+        return False

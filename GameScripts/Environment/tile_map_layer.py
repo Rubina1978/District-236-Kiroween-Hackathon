@@ -14,6 +14,12 @@ def build_tiles(rows=18 * 8, cols=32 * 8):
             y = (c + r) * (30 / 2)
 
             tile_map[r][c] = generate_tile(x, y)
+    
+    for r in range(rows):
+        for c in range(cols):
+            if r == 0 or r == rows - 1 or c == 0 or c == cols - 1:
+
+                tile_map[r][c].set_boundary()
 
     return tile_map
 

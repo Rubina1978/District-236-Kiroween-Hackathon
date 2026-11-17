@@ -57,3 +57,8 @@
 - I have ran out of my free plan of Kiro and now I am having to undertake research to finish off my work.
 - Last thing Kiro did was show me how to increase sizes of my sprites in environment_obj.py
 - I'm out here on my own now.... I need to figure out how to implement these isometric tiles and deactivate images that aren't in the camera view.... oh my life
+
+---
+
+### Since My free Kiro ran out, I was getting some help from online research and other AI.
+- ESPECIALLY, for detecting boundaries (though I was right in implementing is boundary to objects on all 4 sides of the tile map grid), AI gave me code for detecting the rectangular collision of objects in the boundaries list. 
