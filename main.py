@@ -20,7 +20,8 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 player = Player(animator=animator_interface(type="player"), pos=player_pos)
 
 # Build the world (a grid of environment objects).
-current_map = world_build()
+current_map = world_build(False)
+tile_map = world_build(True)
 
 # Camera group with y-sorting: the player and the environment are drawn together
 # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
@@ -28,6 +29,9 @@ camera_group = YSortCameraGroup(screen)
 camera_group.add(player)
 for sprite in current_map.get_sprites():
     camera_group.add(sprite)
+
+for sprite in tile_map.get_sprites():
+    camera_group.ground_sprites.add(sprite)
 
 # -------------------------------------------------------------------------------------------
 # Main game engine loop

@@ -3,27 +3,27 @@ from GameScripts.camera import Camera
 
 
 class YSortCameraGroup(pygame.sprite.Group):
-    """A sprite group that draws its sprites back-to-front by Y position.
-
-    Sprites with a larger rect.bottom (lower on the screen) are drawn last,
-    so they appear in front of sprites higher up. This gives the flat 2D art a
-    sense of depth (the "2.5D" look).
-    """
 
     def __init__(self, display_surface):
-        # display_surface is the screen we draw everything onto.
         super().__init__()
+
         self.display_surface = display_surface
         self.camera = Camera()
 
+        # Separate group for ground tiles
+        self.ground_sprites = pygame.sprite.Group()
+
     def custom_draw(self, player):
-        # Keep the camera centred on the player.
+
+        # Update camera position
         self.camera.update(player)
 
-        # self.sprites() is built into pygame.sprite.Group; it returns every
-        # sprite added to this group. Sort them by their bottom edge so that
-        # things lower down draw on top.
+        # 1. Draw ground tiles FIRST (never Y-sorted)
+        for sprite in self.ground_sprites:
+            offset_rect = self.camera.apply(sprite)
+            self.display_surface.blit(sprite.image, offset_rect)
+
+        # 2. Draw everything else using Y-sorting
         for sprite in sorted(self.sprites(), key=lambda s: s.rect.bottom):
-            # Apply the camera scroll, then draw to the screen.
             offset_rect = self.camera.apply(sprite)
             self.display_surface.blit(sprite.image, offset_rect)

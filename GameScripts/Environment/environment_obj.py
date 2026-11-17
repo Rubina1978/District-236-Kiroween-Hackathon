@@ -1,5 +1,6 @@
 import pygame
 import random
+from settings import ENV_SPRITE_SCALES, ENV_DEFAULT_SCALE
 
 
 class EnvrionmentObject(pygame.sprite.Sprite):
@@ -20,11 +21,28 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
         if self.type == "box":
-            path = f"DylanFiles/Artwork/Environment/Objects/Box/{self.type}_1.png"
+            path = f"Assets/Artwork/Environment/Objects/Box/{self.type}_1.png"
+        elif self.type == "grass1":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
+        elif self.type == "grass2":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
+        elif self.type == "grass3":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
         else:
-            path = f"DylanFiles/Artwork/Environment/Scenery/{self.type}.png"
+            path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
         self.image = pygame.image.load(path).convert_alpha()
+        # Double the size of every map sprite (trees, rocks, bushes, boxes).
+        # scale2x is made for pixel art and makes the image exactly 2x bigger.
+        # The player is loaded separately in player_obj.py, so it is unaffected.
+        if self.type == "tree":
+            self.image = pygame.transform.scale2x(self.image)
+            self.image = pygame.transform.scale2x(self.image)
+        elif self.type == "grass1" or self.type == "grass2" or self.type == "grass3":
+            self.image = pygame.transform.scale2x(self.image)
+            self.image = pygame.transform.scale2x(self.image)
+        else:
+            self.image = pygame.transform.scale2x(self.image)
         # rect is where the sprite sits in the world. x, y come from its grid
         # cell (col * TILE_SIZE, row * TILE_SIZE).
         self.rect = self.image.get_rect(topleft=(x, y))
@@ -34,6 +52,9 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 
     def get_artwork(self):
         return self.artwork
+    
+    def get_image(self):
+        return self.image
 
     def give_loot(self):
         items = [
