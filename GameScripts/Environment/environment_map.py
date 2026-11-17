@@ -23,7 +23,8 @@ def generate_envrionment_obj(x, y):
     """Create one random environment object placed at pixel position (x, y)."""
 
     obj_type_array = [
-        "tree",
+        "tree1",
+        "tree2",
         "rock",
         "bush",
         "box",

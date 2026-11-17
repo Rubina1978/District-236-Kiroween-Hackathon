@@ -27,6 +27,7 @@ tile_map = world_build(True)
 # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
 camera_group = YSortCameraGroup(screen)
 camera_group.add(player)
+
 for sprite in current_map.get_sprites():
     camera_group.add(sprite)
 
