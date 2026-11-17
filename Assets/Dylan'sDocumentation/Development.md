@@ -42,3 +42,11 @@
 ### I also had kiro help implement the shoot function
 - This only triggers the animation it doesn't include actual shooting logic just yet
 ![alt text](image-4.png)
+
+---
+
+### Wholesome notes
+17/11/2026
+- I have set the foundations for the spider class for Hana to look at. I have made it similar to the player class in how it functions in regards to triggering animations and handling directions.
+- I have suggested Hana look at shooting, spider AI, improving the player, UI, health and ammo for both player and spider, look into loot boxes.
+- I have some pressing matters with the map, boundaries, isometric tiles (potentially because it will improve the look of our game), sound effects, music and anywhere else I can support the cause.

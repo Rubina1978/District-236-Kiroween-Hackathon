@@ -17,3 +17,15 @@ TILE_SIZE = 120
 
 # Background colour (dark forest green).
 BG_COLOR = (35, 75, 45)
+
+# How big to draw each type of map sprite. The number is a multiplier:
+# 2 = double size, 3 = triple, 4 = quadruple. To scale just one object type,
+# change only its number here. Any type not listed uses ENV_DEFAULT_SCALE.
+# The player is not affected - it is loaded separately in player_obj.py.
+ENV_SPRITE_SCALES = {
+    "tree": 2,
+    "rock": 2,
+    "bush": 2,
+    "box": 2,
+}
+ENV_DEFAULT_SCALE = 2

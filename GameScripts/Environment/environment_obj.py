@@ -1,5 +1,6 @@
 import pygame
 import random
+from settings import ENV_SPRITE_SCALES, ENV_DEFAULT_SCALE
 
 
 class EnvrionmentObject(pygame.sprite.Sprite):
@@ -25,6 +26,14 @@ class EnvrionmentObject(pygame.sprite.Sprite):
             path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
         self.image = pygame.image.load(path).convert_alpha()
+        # Double the size of every map sprite (trees, rocks, bushes, boxes).
+        # scale2x is made for pixel art and makes the image exactly 2x bigger.
+        # The player is loaded separately in player_obj.py, so it is unaffected.
+        if self.type == "tree":
+            self.image = pygame.transform.scale2x(self.image)
+            self.image = pygame.transform.scale2x(self.image)
+        else:
+            self.image = pygame.transform.scale2x(self.image)
         # rect is where the sprite sits in the world. x, y come from its grid
         # cell (col * TILE_SIZE, row * TILE_SIZE).
         self.rect = self.image.get_rect(topleft=(x, y))
