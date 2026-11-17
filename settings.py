@@ -16,7 +16,7 @@ PLAYER_SPEED = 240
 TILE_SIZE = 120
 
 # Background colour (dark forest green).
-BG_COLOR = (35, 75, 45)
+BG_COLOR = (0, 0, 0)
 
 # How big to draw each type of map sprite. The number is a multiplier:
 # 2 = double size, 3 = triple, 4 = quadruple. To scale just one object type,

@@ -40,7 +40,6 @@ class EnvrionmentObject(pygame.sprite.Sprite):
             self.image = pygame.transform.scale2x(self.image)
         elif self.type == "grass1" or self.type == "grass2" or self.type == "grass3":
             self.image = pygame.transform.scale2x(self.image)
-            self.image = pygame.transform.scale2x(self.image)
         else:
             self.image = pygame.transform.scale2x(self.image)
         # rect is where the sprite sits in the world. x, y come from its grid
