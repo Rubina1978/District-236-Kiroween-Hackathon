@@ -22,6 +22,12 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         # convert_alpha() keeps the transparent edges and makes blitting fast.
         if self.type == "box":
             path = f"Assets/Artwork/Environment/Objects/Box/{self.type}_1.png"
+        elif self.type == "grass1":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
+        elif self.type == "grass2":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
+        elif self.type == "grass3":
+            path = f"Assets/Artwork/Tiles/{self.type}.png"
         else:
             path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
@@ -30,6 +36,9 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         # scale2x is made for pixel art and makes the image exactly 2x bigger.
         # The player is loaded separately in player_obj.py, so it is unaffected.
         if self.type == "tree":
+            self.image = pygame.transform.scale2x(self.image)
+            self.image = pygame.transform.scale2x(self.image)
+        elif self.type == "grass1" or self.type == "grass2" or self.type == "grass3":
             self.image = pygame.transform.scale2x(self.image)
             self.image = pygame.transform.scale2x(self.image)
         else:
@@ -43,6 +52,9 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 
     def get_artwork(self):
         return self.artwork
+    
+    def get_image(self):
+        return self.image
 
     def give_loot(self):
         items = [

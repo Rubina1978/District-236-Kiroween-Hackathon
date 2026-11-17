@@ -7,6 +7,7 @@ class GridMap:
         # are already pygame sprites (EnvrionmentObject), so they have .image
         # and .rect ready for the group.
         self.sprites = []
+        self.tiles = []
         for row in range(len(grid)):
             for col in range(len(grid[row])):
                 obj = grid[row][col]

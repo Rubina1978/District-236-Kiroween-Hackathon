@@ -50,3 +50,10 @@
 - I have set the foundations for the spider class for Hana to look at. I have made it similar to the player class in how it functions in regards to triggering animations and handling directions.
 - I have suggested Hana look at shooting, spider AI, improving the player, UI, health and ammo for both player and spider, look into loot boxes.
 - I have some pressing matters with the map, boundaries, isometric tiles (potentially because it will improve the look of our game), sound effects, music and anywhere else I can support the cause.
+
+---
+
+### Back to Kiro
+- I have ran out of my free plan of Kiro and now I am having to undertake research to finish off my work.
+- Last thing Kiro did was show me how to increase sizes of my sprites in environment_obj.py
+- I'm out here on my own now.... I need to figure out how to implement these isometric tiles and deactivate images that aren't in the camera view.... oh my life
