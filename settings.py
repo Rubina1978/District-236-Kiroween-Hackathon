@@ -15,13 +15,21 @@ PLAYER_SPEED = 240
 # where each cell is this many pixels wide and tall.
 TILE_SIZE = 120
 
-# Background colour (dark forest green).
-BG_COLOR = (0, 0, 0)
+# Background colour: the average colour of the grass tiles. It shows anywhere
+# the world has no tiles (for example past the edge of the map), so it should
+# look like forest floor and not like a black hole.
+BG_COLOR = (55, 90, 32)
 
 # How big to draw each type of map sprite. The number is a multiplier:
 # 2 = double size, 3 = triple, 4 = quadruple. To scale just one object type,
 # change only its number here. Any type not listed uses ENV_DEFAULT_SCALE.
 # The player is not affected - it is loaded separately in player_obj.py.
+# How far apart ground tiles sit, in pixels, along the isometric grid. These
+# match the (60 / 2) and (30 / 2) used in tile_map_layer.py. The floor pattern
+# needs the same spacing so its tiles line up with the real ground.
+ISO_STEP_X = 30
+ISO_STEP_Y = 15
+
 ENV_SPRITE_SCALES = {
     "tree": 2,
     "rock": 2,
