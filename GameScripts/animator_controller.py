@@ -1,6 +1,17 @@
 # Main Interface for Animator
 from .AnimationControllers.player_animator_controller import PlayerAnimator
 from .AnimationControllers.spider_animator_controller import SpiderAnimator
+from .AnimationControllers.box_animator_controller import BoxAnimator
+
+#------------------------------------------------------------------------------
+# Box sprite reference list
+box = [
+    "Assets/Artwork/Environment/Objects/Box/box_1.png",
+    "Assets/Artwork/Environment/Objects/Box/box_2.png",
+    "Assets/Artwork/Environment/Objects/Box/box_3.png",
+    "Assets/Artwork/Environment/Objects/Box/box_4.png",
+    "Assets/Artwork/Environment/Objects/Box/box_5.png",
+]
 
 #------------------------------------------------------------------------------
 # Player sprite reference lists
@@ -262,5 +273,9 @@ def animator_interface(type):
             spider_right_facing = spider_right_facing,
             spider_rightBottom_facing = spider_rightBottom_facing,
             spider_rightTop_facing = spider_rightTop_facing
+        )
+    elif type == "box":
+        return BoxAnimator(
+            box_open = box
         )
     return 0

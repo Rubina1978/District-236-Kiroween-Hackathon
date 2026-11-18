@@ -1,4 +1,5 @@
 from .environment_obj import EnvrionmentObject
+from GameScripts.animator_controller import animator_interface
 from settings import TILE_SIZE
 import random, math
 
@@ -31,5 +32,7 @@ def generate_envrionment_obj(x, y):
     ]
 
     random_type = random.choice(obj_type_array)
-
-    return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y)
+    if random_type == "box":
+        return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=animator_interface(random_type))
+    else:
+        return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=None)

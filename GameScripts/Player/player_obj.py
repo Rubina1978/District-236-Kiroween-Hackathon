@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         # Call the parent Sprite constructor first.
         super().__init__()
         self.animator = animator
+        self.ammo = 20
         # The current animation is a list of file paths to the PNG frames.
         self.animation = animator.idle_camerafacing()
         # Load every frame ONCE here, not every frame in the main loop.
@@ -69,7 +70,7 @@ class Player(pygame.sprite.Sprite):
                 self.frame_index = 0
             self.image = self._current_image()
 
-    def move(self, dt, keys, boundaries):
+    def move(self, dt, keys, boundaries, boxes):
         """Move the ant based on held keys and keep its facing/animation in sync.
 
         dt is delta time in seconds; multiplying speed by dt keeps the speed the
@@ -96,7 +97,7 @@ class Player(pygame.sprite.Sprite):
             self.pos.x += direction.x * PLAYER_SPEED * dt
             self.rect.centerx = round(self.pos.x)
 
-            if self.check_collision(boundaries):
+            if self.check_collision(boundaries=boundaries, boxes=None):
                 self.pos.x = old_x
                 self.rect.centerx = round(self.pos.x)
 
@@ -105,9 +106,12 @@ class Player(pygame.sprite.Sprite):
             self.pos.y += direction.y * PLAYER_SPEED * dt
             self.rect.centery = round(self.pos.y)
 
-            if self.check_collision(boundaries):
+            if self.check_collision(boundaries=boundaries, boxes=None):
                 self.pos.y = old_y
                 self.rect.centery = round(self.pos.y)
+            
+            if self.check_collision(boundaries=None, boxes=boxes):
+                pass
 
             new_moving = True
 
@@ -242,11 +246,20 @@ class Player(pygame.sprite.Sprite):
 
         return player_pos.distance_to(object_pos) <= distance
     
-    def check_collision(self, boundaries):
+    def check_collision(self, boundaries, boxes):
 
-        for boundary in boundaries:
+        if boxes != None:
+            for box in boxes:
 
-            if self.rect.colliderect(boundary.rect):
-                return True
+                if self.rect.colliderect(box.rect):
+
+                    box.give_loot(self)
+                    return True
+
+        if boundaries != None:
+            for boundary in boundaries:
+
+                if self.rect.colliderect(boundary.rect):
+                    return True
 
         return False

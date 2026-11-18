@@ -39,5 +39,6 @@ def generate_tile(x, y):
         type=random_type,
         artwork=random_type,
         x=x,
-        y=y
+        y=y,
+        animator=None
     )
