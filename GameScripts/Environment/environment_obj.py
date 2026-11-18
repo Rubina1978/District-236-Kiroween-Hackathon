@@ -11,13 +11,26 @@ class EnvrionmentObject(pygame.sprite.Sprite):
     sprite group alongside the player.
     """
 
-    def __init__(self, type, artwork, x, y):
+    def __init__(self, type, artwork, x, y, animator):
         # Call the parent Sprite constructor first so this object works with
         # pygame sprite groups.
         super().__init__()
         self.type = type
         self.artwork = artwork
         self.is_boundary = False
+
+        # for box animations
+        self.animator = animator
+        self.animation = None
+        self.frames = []
+
+        self.frame_index = 0
+        self.update_time = 0
+
+        self.animation_playing = False
+        self.opened = False
+
+        self.animation_cooldown = 200
 
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
@@ -55,18 +68,86 @@ class EnvrionmentObject(pygame.sprite.Sprite):
     
     def get_image(self):
         return self.image
-
-    def give_loot(self):
-        items = [
-            "ammo",
-            "spider",
-            "health"
-        ]
-        if self.type == "box":
-            return random.choice(items)
-        else:
-            return 0
     
+    def get_type(self):
+        return self.type
+
+#---------------------------------------------------------------------------------------------
+# if obj is a box
+
+    def give_loot(self, player):
+
+        # Prevent multiple loot rewards
+        if self.opened:
+            return
+
+        if self.type == "box":
+
+            player.ammo += 10
+
+            self.opened = True
+            self.set_box_animation()
+    
+    def get_animation(self):
+        return self.animation
+
+    def get_current_frame(self):
+        """Return the Surface for the frame we are currently on."""
+        return self.image
+
+    def _current_image(self):
+        """The current frame, mirrored horizontally if facing right."""
+        img = self.frames[self.frame_index]
+        if self.flip_x:
+            img = pygame.transform.flip(img, True, False)
+        return img
+
+    def update_animation(self):
+
+        if not self.animation_playing:
+            return
+
+        current_time = pygame.time.get_ticks()
+
+        if current_time - self.update_time >= self.animation_cooldown:
+
+            self.update_time = current_time
+
+            if self.frame_index < len(self.frames) - 1:
+
+                self.frame_index += 1
+                self.image = self.frames[self.frame_index]
+
+            else:
+
+                # Animation finished
+                self.animation_playing = False
+
+    def set_box_animation(self):
+
+        if self.type != "box":
+            return
+
+        # Get animation frames from your animator
+        self.animation = self.animator.box_open
+
+        self.frames = [
+            pygame.transform.scale2x(
+                pygame.image.load(path).convert_alpha()
+            )
+            for path in self.animation
+        ]
+
+        self.frame_index = 0
+        self.update_time = pygame.time.get_ticks()
+
+        self.image = self.frames[self.frame_index]
+
+        self.animation_playing = True
+
+#--------------------------------------------------------------------------------------------
+
+    # if obj is boundary
     def set_boundary(self):
         self.is_boundary = True
     def get_boundary(self):

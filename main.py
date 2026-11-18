@@ -23,6 +23,7 @@ player = Player(animator=animator_interface(type="player"), pos=player_pos)
 current_map = world_build(False)
 tile_map = world_build(True)
 boundaries = []
+boxes = []
 
 # Camera group with y-sorting: the player and the environment are drawn together
 # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
@@ -40,9 +41,11 @@ for row in tile_map.grid:
 
         if obj != 0 and obj.get_boundary():
             boundaries.append(obj)
-# for obj in tile_map:
-#     if obj.get_boundary() == True:
-#         boundaries.append(obj)
+
+for row in current_map.grid:
+    for obj in row:
+        if obj != 0 and obj.get_type() == "box":
+            boxes.append(obj)
 
 
 # -------------------------------------------------------------------------------------------
@@ -69,7 +72,7 @@ while running:
     #         print("you are near boundary")
     #         player.push_back(boundary)
     
-    player.move(dt, keys, boundaries)
+    player.move(dt, keys, boundaries, boxes)
     
 
     # fill the screen with a colour to wipe away anything from last frame
@@ -77,6 +80,9 @@ while running:
 
     # Advance the player's animation, then draw every sprite (player + map)
     # in one y-sorted pass through the camera.
+    for box in boxes:
+        box.update_animation()
+    
     player.update_animation()
     camera_group.custom_draw(player)
 
