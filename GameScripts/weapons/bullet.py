@@ -1,0 +1,26 @@
+import pygame
+
+# Orange-yellow, and the bullet size in pixels.
+BULLET_COLOR = (255, 190, 51)
+BULLET_RADIUS = 4
+
+
+class Bullet:
+    def __init__(self, position, direction, speed):
+        self.position = position.copy()
+        self.direction = direction
+        self.speed = speed
+
+    def update(self, dt):
+        self.position += self.direction * self.speed * dt
+
+    def draw(self, screen, camera_offset):
+        # self.position is a WORLD position (where the bullet is in the forest).
+        # The screen only shows part of the world, so subtract how far the
+        # camera has scrolled to get the position on the screen.
+        screen_pos = self.position - camera_offset
+
+        # draw.circle needs a centre and a radius. The centre must be whole
+        # numbers (pixels), so round both values.
+        center = (round(screen_pos.x), round(screen_pos.y))
+        pygame.draw.circle(screen, BULLET_COLOR, center, BULLET_RADIUS)
