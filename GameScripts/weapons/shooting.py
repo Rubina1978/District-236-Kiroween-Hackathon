@@ -9,11 +9,10 @@ class Shooting:
         self.bullets = []
 
     def remove_old_bullets(self):
-        for bullet in self.bullets:
-            if bullet.is_too_far():
-                self.bullets.remove(bullet)
-
-    
+        self.bullets = [
+            bullet for bullet in self.bullets
+            if not bullet.is_too_far()
+        ]
 
     def fire(self, player_pos, facing):
         # Called when the player shoots. Detecting the mouse click belongs in

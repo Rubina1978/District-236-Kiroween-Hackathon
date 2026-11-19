@@ -11,7 +11,7 @@ class Bullet:
         self.direction = direction
         self.speed = speed
         self.start_position = position.copy()
-        self.max_distance = 600
+        self.max_distance = 400
 
     def update(self, dt):
         self.position += self.direction * self.speed * dt

@@ -1,7 +1,7 @@
 import pygame
 import random
 from settings import ENV_SPRITE_SCALES, ENV_DEFAULT_SCALE
-
+from GameScripts.items import Items
 
 class EnvrionmentObject(pygame.sprite.Sprite):
     """A piece of the environment (tree, rock, bush, box) drawn on the map.
@@ -31,6 +31,8 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         self.opened = False
 
         self.animation_cooldown = 200
+
+        self.items = Items()
 
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
@@ -83,11 +85,10 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 
         if self.type == "box":
 
-            player.ammo += 10
-
+            self.items.box_opened(player)
             self.opened = True
             self.set_box_animation()
-    
+
     def get_animation(self):
         return self.animation
 
