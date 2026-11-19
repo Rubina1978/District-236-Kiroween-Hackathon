@@ -3,6 +3,7 @@ from GameScripts.world_builder import world_build
 from GameScripts.animator_controller import animator_interface
 from GameScripts.Player.player_obj import Player
 from GameScripts.Sprites.y_sort import YSortCameraGroup
+from GameScripts.weapons.shooting import Shooting
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 
 pygame.init()
@@ -18,6 +19,9 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())
 # Load Player & set position.
 # Player loads all of its animation frames once when it is created.
 player = Player(animator=animator_interface(type="player"), pos=player_pos)
+
+# Holds every bullet that is currently flying.
+shooting = Shooting()
 
 # Build the world (a grid of environment objects).
 current_map = world_build(False)
@@ -61,6 +65,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        # MOUSEBUTTONDOWN fires once per click. button 1 is the left button.
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            shooting.fire(player.pos, player.facing)
 
     # Read the keyboard state every frame and pass it to the player. Holding a
     # key moves continuously; the player switches to run while held and idle on
@@ -85,6 +92,14 @@ while running:
     
     player.update_animation()
     camera_group.custom_draw(player)
+
+    # Move and draw the bullets. This comes after custom_draw because that call
+    # updates the camera, and bullets need the camera offset to be drawn in the
+    # right place on screen.
+    camera_offset = camera_group.get_camera().offset
+    for bullet in shooting.bullets:
+        bullet.update(dt)
+        bullet.draw(screen, camera_offset)
 
     # flip() the display to put work on screen
     pygame.display.flip()
