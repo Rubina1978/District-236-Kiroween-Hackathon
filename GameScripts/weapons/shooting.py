@@ -8,6 +8,11 @@ class Shooting:
     def __init__(self):
         self.bullets = []
 
+    def remove_old_bullets(self):
+        for bullet in self.bullets:
+            if bullet.is_too_far():
+                self.bullets.remove(bullet)
+
     
 
     def fire(self, player_pos, facing):
@@ -61,3 +66,8 @@ class Shooting:
         # Make the bullet and remember it so we can update and draw it later.
         bullet = Bullet(bullet_pos, bullet_direction, BULLET_SPEED)
         self.bullets.append(bullet)
+
+    def update(self, dt):
+        for bullet in self.bullets:
+            bullet.update(dt)
+        self.remove_old_bullets()

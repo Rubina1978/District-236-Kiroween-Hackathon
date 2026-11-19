@@ -10,6 +10,8 @@ class Bullet:
         self.position = position.copy()
         self.direction = direction
         self.speed = speed
+        self.start_position = position.copy()
+        self.max_distance = 600
 
     def update(self, dt):
         self.position += self.direction * self.speed * dt
@@ -24,3 +26,10 @@ class Bullet:
         # numbers (pixels), so round both values.
         center = (round(screen_pos.x), round(screen_pos.y))
         pygame.draw.circle(screen, BULLET_COLOR, center, BULLET_RADIUS)
+
+    def distance_travelled(self):
+        return self.position.distance_to(self.start_position)
+
+    def is_too_far(self):
+        # True once the bullet has flown past its maximum range.
+        return self.distance_travelled() > self.max_distance
