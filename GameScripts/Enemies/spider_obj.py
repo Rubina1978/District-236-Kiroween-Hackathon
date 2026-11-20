@@ -93,7 +93,7 @@ class Spider(pygame.sprite.Sprite):
 
         else:
             new_moving = False
-            if player.life > 0:
+            if not player.lifeline.is_dead():
                 player.take_life()
             else:
                 player.kill_player()

@@ -22,6 +22,5 @@ class Items:
         self.reward = random.choice(self.random_choices)
         self.box_reward(player, self.reward)
         print(f"Reward: {self.reward}, lives: {player.lifeline.lives}")
-
     
     
