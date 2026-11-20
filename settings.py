@@ -37,3 +37,19 @@ ENV_SPRITE_SCALES = {
     "box": 2,
 }
 ENV_DEFAULT_SCALE = 2
+
+# --- Combat balance ---
+# Milliseconds the ant cannot lose another life after a bite.
+INVULNERABLE_MS = 2000
+# Milliseconds between each blink (show / hide) while the ant is protected.
+BLINK_MS = 100
+# Seconds the red flash takes to fade out after the ant is bitten.
+DAMAGE_FLASH_SECONDS = 0.25
+
+INVULNERABLE_MS = 2000
+BLINK_MS = 100
+# How far (pixels) a bite pushes the ant away from the spider.
+KNOCKBACK_DISTANCE = 40
+# How long (seconds) the push takes. A short time feels like a shove.
+KNOCKBACK_SECONDS = 0.15
+DAMAGE_FLASH_SECONDS = 0.25
