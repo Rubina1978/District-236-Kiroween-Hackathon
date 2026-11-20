@@ -2,6 +2,8 @@ import pygame
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from GameScripts.camera import Camera
 from GameScripts.Sprites.floor_pattern import build_floor_pattern
+from GameScripts.Enemies.pooling_system import PoolingSystem
+import random
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -9,6 +11,10 @@ class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self, display_surface):
         super().__init__()
 
+        self.spawn_interval = 3000  # 3 seconds, milliseconds
+        self.last_spawn_time = pygame.time.get_ticks()
+
+        self.max_spiders = 10
         self.display_surface = display_surface
         self.camera = Camera()
 
@@ -17,6 +23,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         # Built once here, not every frame. Drawn behind the real ground so
         # the area past the edge of the map still looks like forest.
         self.floor = build_floor_pattern()
+
+        # This is for drawing the enemies
+        self.enemy_pool = PoolingSystem()
+        self.enemies_to_spawn = self.enemy_pool.get_activated_enemies()
 
         # Environment culling
         self.culling_margin = 200
@@ -56,10 +66,9 @@ class YSortCameraGroup(pygame.sprite.Group):
 
     def custom_draw(self, player):
 
-        # Update camera
         self.camera.update(player)
 
-        # 0. Draw the repeating floor behind everything
+        # 0. Draw floor
         self.draw_floor()
 
         # 1. Draw ground tiles
@@ -74,9 +83,12 @@ class YSortCameraGroup(pygame.sprite.Group):
                     offset_rect
                 )
 
-        # 2. Draw Y-sorted sprites, with culling
+        # 2. Combine regular sprites and active enemies
+        all_sprites = list(self.sprites()) + self.enemies_to_spawn
+
+        # 3. Cull and Y-sort everything together
         visible_sprites = [
-            sprite for sprite in self.sprites()
+            sprite for sprite in all_sprites
             if self.is_visible(sprite)
         ]
 
@@ -94,3 +106,69 @@ class YSortCameraGroup(pygame.sprite.Group):
 
     def get_camera(self):
         return self.camera
+    
+# ------------------------------------------------------------
+    def spawn_enemy(self):
+
+        current_time = pygame.time.get_ticks()
+
+        # Check whether enough time has passed
+        if current_time - self.last_spawn_time >= self.spawn_interval:
+
+            # Check maximum active spider count
+            if len(self.enemy_pool.activated) < self.max_spiders:
+
+                spawn_position = self.get_random_spawn_position()
+
+                self.enemy_pool.respawn_spider(spawn_position)
+
+            self.last_spawn_time = current_time
+
+    def get_random_spawn_position(self, margin=150):
+
+        camera = self.camera_rect
+
+        direction = random.choice([
+            "top",
+            "bottom",
+            "left",
+            "right"
+        ])
+
+        if direction == "top":
+
+            x = random.randint(
+                camera.left,
+                camera.right
+            )
+
+            y = camera.top - margin
+
+        elif direction == "bottom":
+
+            x = random.randint(
+                camera.left,
+                camera.right
+            )
+
+            y = camera.bottom + margin
+
+        elif direction == "left":
+
+            x = camera.left - margin
+
+            y = random.randint(
+                camera.top,
+                camera.bottom
+            )
+
+        else:
+
+            x = camera.right + margin
+
+            y = random.randint(
+                camera.top,
+                camera.bottom
+            )
+
+        return (x, y)

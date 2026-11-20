@@ -1,8 +1,8 @@
 import pygame
 
 # Orange-yellow, and the bullet size in pixels.
-BULLET_COLOR = (255, 190, 51)
-BULLET_RADIUS = 4
+BULLET_COLOR = (0, 0, 0)
+BULLET_RADIUS = 2
 
 
 class Bullet:
@@ -11,7 +11,7 @@ class Bullet:
         self.direction = direction
         self.speed = speed
         self.start_position = position.copy()
-        self.max_distance = 600
+        self.max_distance = 400
 
     def update(self, dt):
         self.position += self.direction * self.speed * dt
