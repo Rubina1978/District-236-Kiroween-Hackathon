@@ -67,6 +67,12 @@ class Player(pygame.sprite.Sprite):
         self.image = self._current_image()
         self.rect = self.image.get_rect(center=self.pos)
 
+        # True while the shooting animation is playing.
+        self.shooting = False
+
+        # Tracks whether the shooting animation has reached its final frame.
+        self.shoot_finished = False
+
     def get_animation(self):
         return self.animation
 
@@ -82,14 +88,39 @@ class Player(pygame.sprite.Sprite):
         return img
 
     def update_animation(self):
-        """Move to the next frame if enough time has passed since the last switch."""
+        """Advance animation frames, looping normal animations but not shooting."""
+
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
             self.update_time = pygame.time.get_ticks()
-            self.frame_index += 1
-            # If we've gone past the last frame, loop back to the first.
-            if self.frame_index >= len(self.frames):
-                self.frame_index = 0
+
+            if self.shooting:
+                # If this is the final frame, finish the shooting animation.
+                if self.frame_index >= len(self.frames) - 1:
+                    self.shoot_finished = True
+                    return
+
+                self.frame_index += 1
+
+            else:
+                # Normal idle and running animations loop.
+                self.frame_index += 1
+
+                if self.frame_index >= len(self.frames):
+                    self.frame_index = 0
+
             self.image = self._current_image()
+    
+    def start_shooting(self):
+        """Start a fresh shooting animation."""
+
+        self.shooting = True
+        self.shoot_finished = False
+
+        # Lock the facing direction to where the player aimed.
+        self.facing = self.aim_facing
+        self.flip_x = False
+
+        self.set_animator_shoot(self.facing)
 
     def move(self, dt, keys, boundaries, boxes):
         """Move the ant based on held keys and keep its facing/animation in sync.
@@ -107,7 +138,7 @@ class Player(pygame.sprite.Sprite):
         # returns a tuple (left, middle, right) of booleans, so [0] is the left
         # button. keys only holds KEYBOARD state, so it cannot tell us about the
         # mouse - that is why keys[MOUSEBUTTONDOWN] never returned True here.
-        shooting = pygame.mouse.get_pressed()[0]
+        shooting = self.shooting
 
         direction = pygame.Vector2(dx, dy)
         if direction.length_squared() > 0:
@@ -176,14 +207,38 @@ class Player(pygame.sprite.Sprite):
         # changes, otherwise we would reload the PNGs from disk every frame.
         # Shooting takes priority: while shooting you see the shoot pose even
         # if you are also moving; otherwise run while moving, else idle.
-        if (shooting, new_moving, new_facing, new_flip) != (self.shooting, self.moving, self.facing, self.flip_x):
-            self.shooting = shooting
+        # Shooting animation takes priority over walking and idle.
+        if self.shooting:
+
+            if not self.shoot_finished:
+                self.moving = new_moving
+                return
+
+            # Shooting animation has finished.
+            self.shooting = False
+            self.shoot_finished = False
+
+            # Force the transition back to the appropriate animation.
             self.moving = new_moving
             self.facing = new_facing
             self.flip_x = new_flip
-            if shooting:
-                self.set_animator_shoot(new_facing)
-            elif new_moving:
+
+            if new_moving:
+                self.set_animator_run(new_facing)
+            else:
+                self.set_animator_idle(new_facing)
+
+            return
+
+        # Normal movement animation.
+        if (new_moving, new_facing, new_flip) != (
+            self.moving, self.facing, self.flip_x
+        ):
+            self.moving = new_moving
+            self.facing = new_facing
+            self.flip_x = new_flip
+
+            if new_moving:
                 self.set_animator_run(new_facing)
             else:
                 self.set_animator_idle(new_facing)
