@@ -43,6 +43,10 @@ class Player(pygame.sprite.Sprite):
         # Set by check_collision() when a box is freshly opened.
         # main.py reads this once per frame and clears it.
         self.last_reward = None
+        # Facing chosen by aiming with the mouse. It overrides the walking
+        # facing until aim_until (a time in ms from pygame.time.get_ticks()).
+        self.aim_facing = None
+        self.aim_until = 0
 
         # A pygame sprite needs .image (the picture) and .rect (its position).
         # We keep a float position so small per-frame movement does not get
@@ -148,6 +152,10 @@ class Player(pygame.sprite.Sprite):
         else:  # dx > 0
             new_facing, new_flip = "right_facing", False
 
+        # Just after a shot, face the aim direction instead of the walking one.
+        if pygame.time.get_ticks() < self.aim_until:
+            new_facing = self.aim_facing
+
         # Only swap animations when the shooting/moving/facing state actually
         # changes, otherwise we would reload the PNGs from disk every frame.
         # Shooting takes priority: while shooting you see the shoot pose even
@@ -243,6 +251,34 @@ class Player(pygame.sprite.Sprite):
         elif facing == "rightTop_facing":
             self.animation = self.animator.shoot_rightTop()
         self._reload_frames(self.animation)
+
+    def face_towards(self, direction):
+        """Turn the ant toward an aim direction (a normalized Vector2)."""
+    # A component smaller than 0.38 counts as "not that way". 0.38 is
+    # sin(22.5 degrees), which splits the circle into 8 equal slices.
+        dx = 0 if abs(direction.x) < 0.38 else (1 if direction.x > 0 else -1)
+        dy = 0 if abs(direction.y) < 0.38 else (1 if direction.y > 0 else -1)
+
+    # Same names as in move(). Diagonals first, then the 4 straight ones.
+        if dx < 0 and dy < 0:
+            self.aim_facing = "leftTop_facing"
+        elif dx > 0 and dy < 0:
+            self.aim_facing = "rightTop_facing"
+        elif dx < 0 and dy > 0:
+            self.aim_facing = "leftBottom_facing"
+        elif dx > 0 and dy > 0:
+            self.aim_facing = "rightBottom_facing"
+        elif dy < 0:
+            self.aim_facing = "forward_facing"
+        elif dy > 0:
+            self.aim_facing = "camera_facing"
+        elif dx < 0:
+            self.aim_facing = "left_facing"
+        else:
+            self.aim_facing = "right_facing"
+
+        # The aim facing wins over the walking facing until this time (ms).
+        self.aim_until = pygame.time.get_ticks() + 300
 
     def is_near(self, obj, distance=1):
 
