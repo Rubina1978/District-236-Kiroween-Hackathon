@@ -20,6 +20,11 @@ link: https://freesound.org/people/newagesoup/sounds/364740/
 licence: Creative Commons 0 (CC0)
 Edits: None
 ![alt text](image.png)
+
+---
+oh sh-t by xtrgamr
+licence: Creative Commons 4 (CC4) - have to attribute
+link: https://freesound.org/people/xtrgamr/sounds/278895/
 ---
 Dylan Austin
 AntSoldierGameMastered.wav

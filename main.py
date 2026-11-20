@@ -70,6 +70,7 @@ shoot_sounds = [shot1, shot2]
 walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
 cardboard_box = pygame.mixer.Sound("Assets/Audio/SoundFX/Box/cardboard_box.wav")
+ouch = pygame.mixer.Sound("Assets/Audio/SoundFX/Combat/ouch.wav")
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -241,6 +242,7 @@ while running:
 
     # A spider bit the ant this frame: start the red flash, then clear the flag.
     if player.just_hit:
+        ouch.play()
         damage_flash.trigger()
         player.just_hit = False
 
