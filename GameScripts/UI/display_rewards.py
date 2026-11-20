@@ -13,7 +13,7 @@ MARGIN = 20
 ICON_SIZE = 64
 
 # The Amazon logo is drawn at this size, placed above the reward icon.
-LOGO_SIZE = 128
+LOGO_SIZE = 140
 
 # Map from the reward string (set in items.py) to the icon file.
 REWARD_ICONS = {
