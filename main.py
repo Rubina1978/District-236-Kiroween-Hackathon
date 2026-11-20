@@ -49,20 +49,22 @@ walk4 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR1.ogg")
 walk5 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR2.ogg")
 walk6 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR3.ogg")
 
-walk1.set_volume(0.10)
-walk2.set_volume(0.10)
-walk3.set_volume(0.10)
-walk4.set_volume(0.10)
-walk5.set_volume(0.10)
-walk6.set_volume(0.10)
+walk1.set_volume(0.08)
+walk2.set_volume(0.08)
+walk3.set_volume(0.08)
+walk4.set_volume(0.08)
+walk5.set_volume(0.08)
+walk6.set_volume(0.08)
 
 walk_channel = pygame.mixer.Channel(1)
 
 # shooting sound effects
 shot1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/shotgun.wav")
 shot2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/rifle.wav")
-shot1.set_volume(0.5)
-shot2.set_volume(0.5)
+shot1.set_volume(0.25)
+shot2.set_volume(0.25)
+
+shoot_channel = pygame.mixer.Channel(2)
 
 shoot_sounds = [shot1, shot2]
 walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
@@ -153,37 +155,49 @@ while running:
             running = False
         # MOUSEBUTTONDOWN fires once per click. button 1 is the left button.
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if player.ammo > 0:
-                # where the cursor is on the screen
-                mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
+            if not shoot_channel.get_busy():
+                if player.ammo > 0:
+                    if not shoot_channel.get_busy():
+                        shot = random.choice(shoot_sounds)
+                        shoot_channel.play(shot)
+                    # where the cursor is on the screen
+                    mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
 
-                # Screen to world: Add how far the camera has scrolled
-                mouse_world = mouse_screen + camera_group.get_camera().offset
-                
-                # Direction from the ant to the cursor
-                direction = mouse_world - player.pos
-
-                # normalise() fails on a zero-length vector (a click exactly on the ant),\
-                # so only continue when the vector has some length. 
-                if direction.length_squared() > 0:
-                    direction = direction.normalize()
-                    print(direction)
-                    player.face_towards(direction)
+                    # Screen to world: Add how far the camera has scrolled
+                    mouse_world = mouse_screen + camera_group.get_camera().offset
                     
-                    shooting.fire(player.pos, direction)
-                    random.choice(shoot_sounds).play()
-                    player.ammo -= 1
-                    print(player.ammo)
+                    # Direction from the ant to the cursor
+                    direction = mouse_world - player.pos
+
+                    # normalise() fails on a zero-length vector (a click exactly on the ant),\
+                    # so only continue when the vector has some length. 
+                    if direction.length_squared() > 0:
+                        direction = direction.normalize()
+                        print(direction)
+                        player.face_towards(direction)
+                        player.start_shooting()
+                        shooting.fire(player.pos, direction)
+                        player.ammo -= 1
+                        print(player.ammo)
 
     # Read the keyboard state every frame and pass it to the player. Holding a
     # key moves continuously; the player switches to run while held and idle on
     # release. Movement logic lives in player_obj, so the loop stays short.
     keys = pygame.key.get_pressed()
 
-    if keys:
+    moving = (
+        keys[pygame.K_w] or
+        keys[pygame.K_a] or
+        keys[pygame.K_s] or
+        keys[pygame.K_d]
+    )
+
+    if moving:
         if not walk_channel.get_busy():
             walk_sound = random.choice(walking_sounds)
             walk_channel.play(walk_sound)
+    else:
+        walk_channel.stop()
 
     # for boundary in boundaries:
     #     if player.is_near(boundary):
