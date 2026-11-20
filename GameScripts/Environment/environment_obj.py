@@ -78,16 +78,23 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 # if obj is a box
 
     def give_loot(self, player):
+        """Open the box, apply the reward, and return the reward string.
 
+        Returns None if the box was already opened or is not a box.
+        main.py uses the return value to trigger the reward popup.
+        """
         # Prevent multiple loot rewards
         if self.opened:
-            return
+            return None
 
         if self.type == "box":
 
             self.items.box_opened(player)
             self.opened = True
             self.set_box_animation()
+            return self.items.reward  # e.g. "ammo", "life", "health_potion"
+
+        return None
 
     def get_animation(self):
         return self.animation

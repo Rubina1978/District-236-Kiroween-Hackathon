@@ -62,3 +62,11 @@
 
 ### Since My free Kiro ran out, I was getting some help from online research and other AI.
 - ESPECIALLY, for detecting boundaries (though I was right in implementing is boundary to objects on all 4 sides of the tile map grid), AI gave me code for detecting the rectangular collision of objects in the boundaries list. 
+
+---
+
+### Making of the spider AI, death and Bullet collision
+- I initially had chatGPT help with using the right code to get collisions working, spiders spawning, and spiders moving. I set up a lot of the foundations in the classes, as well as the poolsystem and how the pool system connects to the y-sorted camera groups etc etc.
+
+- However I couldn't understand how to make the spiders die and why bullet collisions were not responsive in the right way, and Kiro managed to wire it better
+![alt text](image-5.png)

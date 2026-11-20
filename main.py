@@ -4,6 +4,7 @@ from GameScripts.animator_controller import animator_interface
 from GameScripts.Player.player_obj import Player
 from GameScripts.Sprites.y_sort import YSortCameraGroup
 from GameScripts.weapons.shooting import Shooting
+from GameScripts.UI.display_rewards import RewardPopup
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 
 pygame.init()
@@ -22,6 +23,9 @@ player = Player(animator=animator_interface(type="player"), pos=player_pos)
 print("Starting ammo:", player.ammo)
 # Holds every bullet that is currently flying.
 shooting = Shooting()
+
+# Reward popup — shown in the top-right corner when the player loots a box.
+reward_popup = RewardPopup()
 
 # Build the world (a grid of environment objects).
 current_map = world_build(False)
@@ -86,6 +90,13 @@ while running:
     #         player.push_back(boundary)
     
     player.move(dt, keys, boundaries, boxes)
+
+    # check_collision returns the reward string when a fresh box is opened.
+    # Pass it to the popup so the icon appears in the corner.
+    reward = player.last_reward
+    if reward:
+        reward_popup.show(reward)
+        player.last_reward = None
     
 
     # fill the screen with a colour to wipe away anything from last frame
@@ -103,8 +114,8 @@ while running:
 
     # Update enemies
     for spider in camera_group.enemy_pool.get_activated_enemies():
-
-        spider.move(dt, player)
+        if not spider.dying:
+            spider.move(dt, player)
         spider.update_animation()
 
     camera_group.custom_draw(player)
@@ -117,14 +128,19 @@ while running:
     for bullet in shooting.bullets:
         bullet.draw(screen, camera_offset)
 
-    for spider in camera_group.enemy_pool.get_activated_enemies():
-        spider.move(dt, player)
-        spider.update_animation()
+    # Return fully-dead spiders to the pool so they can be reused.
+    camera_group.enemy_pool.check_dead()
 
-    for bullet in shooting.bullets:
+    for bullet in shooting.bullets[:]:
         for spider in camera_group.enemy_pool.get_activated_enemies():
-            if bullet.is_near(obj=spider):
+            if not spider.dying and bullet.hits(spider):
                 spider.kill_spider()
+                shooting.bullets.remove(bullet)
+                break  # one bullet kills one spider; stop checking this bullet
+
+    # Advance the popup timer and draw it on top of everything.
+    reward_popup.update(dt)
+    reward_popup.draw(screen)
     
     # flip() the display to put work on screen
     pygame.display.flip()
