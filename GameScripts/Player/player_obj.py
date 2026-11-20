@@ -34,12 +34,14 @@ class Player(pygame.sprite.Sprite):
         # actually changes, so we don't reload frames from disk every frame.
         self.facing = "camera_facing"
         self.moving = False
-        # True while the player is shooting. Like moving, this is part of the
-        # state we compare, so the animation only swaps when it actually changes.
+        # True while the player is shooting.
         self.shooting = False
-        # When moving right we mirror the (left-facing) side art for now. Swap
-        # this for real right-facing art when those frames are ready.
+        # When moving right we mirror the (left-facing) side art for now.
         self.flip_x = False
+
+        # Set by check_collision() when a box is freshly opened.
+        # main.py reads this once per frame and clears it.
+        self.last_reward = None
 
         # A pygame sprite needs .image (the picture) and .rect (its position).
         # We keep a float position so small per-frame movement does not get
@@ -255,7 +257,12 @@ class Player(pygame.sprite.Sprite):
 
                 if self.rect.colliderect(box.rect):
 
-                    box.give_loot(self)
+                    reward = box.give_loot(self)
+                    # reward is a string like "ammo" if the box was just opened,
+                    # or None if it was already open. Store it so main.py can
+                    # trigger the reward popup.
+                    if reward:
+                        self.last_reward = reward
                     return True
 
         if boundaries != None:
