@@ -183,7 +183,7 @@ class Spider(pygame.sprite.Sprite):
         elif facing == "leftTop_facing":
             self.animation = self.animator.idle()
         elif facing == "right_facing":
-            self.animation = self.animator.idlet()
+            self.animation = self.animator.idle()
         elif facing == "rightBottom_facing":
             self.animation = self.animator.idle()
         elif facing == "rightTop_facing":
