@@ -4,11 +4,18 @@ import pygame
 
 PLAYER_SPEED = 125
 ANIMATION_COOLDOWN = 100
+
+# How long (ms) to wait after the death animation finishes before the spider
+# is returned to the pool. Gives the last frame time to be visible.
+DEATH_LINGER_MS = 500
+
 class Spider(pygame.sprite.Sprite):
     def __init__(self, animator):
         super().__init__()
 
         self.is_dead = False
+        self.dying = False          # True while the death animation is playing
+        self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
         # Animation
@@ -50,11 +57,26 @@ class Spider(pygame.sprite.Sprite):
         return img
 
     def update_animation(self):
-        """Move to the next frame if enough time has passed since the last switch."""
-        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
-            self.update_time = pygame.time.get_ticks()
+        """Advance the animation by one frame if enough time has passed.
+
+        Normal animations loop. The death animation plays once and stops on
+        the last frame. After it finishes we start a short linger timer; once
+        that expires is_dead is set to True so the pool can recycle the spider.
+        """
+        now = pygame.time.get_ticks()
+
+        # Linger: death animation has finished, wait a moment then mark dead.
+        if self.dying and self.frame_index >= len(self.frames) - 1:
+            if self.death_timer == 0:
+                # First time we land on the last frame — start the timer.
+                self.death_timer = now
+            elif now - self.death_timer >= DEATH_LINGER_MS:
+                self.is_dead = True
+            return  # Don't advance past the last frame.
+
+        if now - self.update_time > ANIMATION_COOLDOWN:
+            self.update_time = now
             self.frame_index += 1
-            # If we've gone past the last frame, loop back to the first.
             if self.frame_index >= len(self.frames):
                 self.frame_index = 0
             self.image = self._current_image()
@@ -220,6 +242,8 @@ class Spider(pygame.sprite.Sprite):
 
         # Reset death state
         self.is_dead = False
+        self.dying = False
+        self.death_timer = 0
 
         # Reset position
         self.pos = pygame.math.Vector2(position)
@@ -247,4 +271,9 @@ class Spider(pygame.sprite.Sprite):
         )
     
     def kill_spider(self):
-        self.is_dead = True
+        """Switch to the death animation. is_dead is set later by update_animation()."""
+        if self.dying:
+            return  # already dying, don't restart
+        self.dying = True
+        self.death_timer = 0
+        self._reload_frames(self.animator.death())

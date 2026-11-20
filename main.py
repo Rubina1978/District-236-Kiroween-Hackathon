@@ -103,8 +103,8 @@ while running:
 
     # Update enemies
     for spider in camera_group.enemy_pool.get_activated_enemies():
-
-        spider.move(dt, player)
+        if not spider.dying:
+            spider.move(dt, player)
         spider.update_animation()
 
     camera_group.custom_draw(player)
@@ -117,14 +117,15 @@ while running:
     for bullet in shooting.bullets:
         bullet.draw(screen, camera_offset)
 
-    for spider in camera_group.enemy_pool.get_activated_enemies():
-        spider.move(dt, player)
-        spider.update_animation()
+    # Return fully-dead spiders to the pool so they can be reused.
+    camera_group.enemy_pool.check_dead()
 
-    for bullet in shooting.bullets:
+    for bullet in shooting.bullets[:]:
         for spider in camera_group.enemy_pool.get_activated_enemies():
-            if bullet.is_near(obj=spider):
+            if not spider.dying and bullet.hits(spider):
                 spider.kill_spider()
+                shooting.bullets.remove(bullet)
+                break  # one bullet kills one spider; stop checking this bullet
     
     # flip() the display to put work on screen
     pygame.display.flip()
