@@ -101,6 +101,10 @@ class YSortCameraGroup(pygame.sprite.Group):
             visible_sprites,
             key=lambda s: s.rect.bottom
         ):
+            # Blink: skip drawing the ant on the "off" beats while it is
+            # protected after a bite.
+            if sprite is player and player.is_blink_hidden():
+                continue
 
             offset_rect = self.camera.apply(sprite)
 

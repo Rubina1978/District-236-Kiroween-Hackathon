@@ -1,5 +1,8 @@
 import pygame
-from settings import PLAYER_SPEED
+from settings import (
+    PLAYER_SPEED, INVULNERABLE_MS, BLINK_MS,
+    KNOCKBACK_DISTANCE, KNOCKBACK_SECONDS,
+)
 from GameScripts.health import LifeLine
 from GameScripts.sprite_cache import load as load_sprite
 
@@ -47,6 +50,15 @@ class Player(pygame.sprite.Sprite):
         # facing until aim_until (a time in ms from pygame.time.get_ticks()).
         self.aim_facing = None
         self.aim_until = 0
+        # Time (ms) of the last hit taken. Starts far in the past so the very
+        # first hit is never blocked by the cooldown.
+        self.last_hit_time = -INVULNERABLE_MS
+        # Set to True when the ant is bitten. main.py reads it once per frame
+        # (to start the red flash) and sets it back to False.
+        self.just_hit = False
+        # Knockback: the direction of the push and how many seconds are left.
+        self.knockback_dir = pygame.Vector2(0, 0)
+        self.knockback_time_left = 0.0
 
         # A pygame sprite needs .image (the picture) and .rect (its position).
         # We keep a float position so small per-frame movement does not get
@@ -126,6 +138,10 @@ class Player(pygame.sprite.Sprite):
 
         else:
             new_moving = False
+
+        # Slide the ant away from the spider that bit it (does nothing when
+        # there is no knockback running).
+        self._apply_knockback(dt, boundaries)
 
         # Pick a facing from the movement direction.
         # Diagonals (both axes pressed) must be checked FIRST. An up-left press
@@ -311,8 +327,68 @@ class Player(pygame.sprite.Sprite):
         return False
 
 # ---------------------------
-    def take_life(self):
+    def is_invulnerable(self):
+        """True while the ant is still protected after a bite."""
+        return pygame.time.get_ticks() - self.last_hit_time < INVULNERABLE_MS
+
+    def is_blink_hidden(self):
+        """True on the 'off' beats of the blink, so the ant is not drawn.
+
+        While protected, time since the hit is cut into slices of BLINK_MS.
+        Even slices (0, 2, 4...) hide the ant, odd slices show it.
+        """
+        if not self.is_invulnerable():
+            return False
+        slice_number = (pygame.time.get_ticks() - self.last_hit_time) // BLINK_MS
+        return slice_number % 2 == 0
+
+    def take_life(self, attacker_pos=None):
+        # While protected, bites from any spider are ignored, so spiders
+        # standing on the ant cannot take every life in a fraction of a second.
+        if self.is_invulnerable():
+            return
+        self.last_hit_time = pygame.time.get_ticks()
+        self.just_hit = True
         self.lifeline.lose()
+
+        # Push the ant away from the spider that bit it.
+        if attacker_pos is not None:
+            away = self.pos - pygame.Vector2(attacker_pos)
+            if away.length_squared() == 0:
+                # Exactly on top of each other: pick any direction.
+                away = pygame.Vector2(0, 1)
+            self.knockback_dir = away.normalize()
+            self.knockback_time_left = KNOCKBACK_SECONDS
+
+    def _apply_knockback(self, dt, boundaries):
+        """Move the ant along the knockback direction for this frame.
+
+        Same idea as move(): try x, then y, and undo a step that would put
+        the ant inside a boundary, so the push never goes through walls.
+        """
+        if self.knockback_time_left <= 0:
+            return
+
+        # Never use more time than is left, so the push ends at exactly
+        # KNOCKBACK_DISTANCE pixels.
+        step_time = min(dt, self.knockback_time_left)
+        self.knockback_time_left -= step_time
+        speed = KNOCKBACK_DISTANCE / KNOCKBACK_SECONDS
+        step = self.knockback_dir * speed * step_time
+
+        old_x = self.pos.x
+        self.pos.x += step.x
+        self.rect.centerx = round(self.pos.x)
+        if self.check_collision(boundaries=boundaries, boxes=None):
+            self.pos.x = old_x
+            self.rect.centerx = round(self.pos.x)
+
+        old_y = self.pos.y
+        self.pos.y += step.y
+        self.rect.centery = round(self.pos.y)
+        if self.check_collision(boundaries=boundaries, boxes=None):
+            self.pos.y = old_y
+            self.rect.centery = round(self.pos.y)
         print(f"Lost a life! You have {self.lifeline.lives} lives remaining!")
     def kill_player(self):
         is_dead = True

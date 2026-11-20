@@ -5,6 +5,7 @@ from GameScripts.Player.player_obj import Player
 from GameScripts.Sprites.y_sort import YSortCameraGroup
 from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
+from GameScripts.UI.damage_flash import DamageFlash
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 
 def draw_ui(screen, player):
@@ -69,6 +70,9 @@ shooting = Shooting()
 
 # Reward popup — shown in the top-right corner when the player loots a box.
 reward_popup = RewardPopup()
+
+# Red flash over the screen when the ant is bitten.
+damage_flash = DamageFlash()
 
 # Build the world (a grid of environment objects).
 current_map = world_build(False)
@@ -178,6 +182,11 @@ while running:
             spider.move(dt, player)
         spider.update_animation()
 
+    # A spider bit the ant this frame: start the red flash, then clear the flag.
+    if player.just_hit:
+        damage_flash.trigger()
+        player.just_hit = False
+
     camera_group.custom_draw(player)
 
     # Move and draw the bullets. This comes after custom_draw because that call
@@ -199,6 +208,10 @@ while running:
                 spider.kill_spider()
                 shooting.bullets.remove(bullet)
                 break  # one bullet kills one spider; stop checking this bullet
+
+    # Red damage flash. Drawn before the popup and HUD so they stay readable.
+    damage_flash.update(dt)
+    damage_flash.draw(screen)
 
     # Advance the popup timer and draw it on top of everything.
     reward_popup.update(dt)

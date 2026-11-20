@@ -174,15 +174,11 @@ class Spider(pygame.sprite.Sprite):
                 self.set_animator_idle(new_facing)
     
     def attack_player(self, player):
-        # need some kinf of delay system
-        wait_time = pygame.time.get_ticks()
-
-        if pygame.time.get_ticks() - wait_time > 1000:
-            if not player.lifeline.is_dead():
-                player.take_life()
-            else:
-                player.kill_player()
-        wait_time = pygame.time.get_ticks()
+        # The waiting time between hits lives in Player.take_life(), so it
+        # works the same no matter how many spiders are touching the ant.
+        if not player.lifeline.is_dead():
+            # Pass our position so the ant is pushed away from this spider.
+            player.take_life(self.pos)
 #-----------------------------------------------------------------------------------------------
 # IMPORTANT
 #----------------------------------------------------------------------------------------
