@@ -13,7 +13,14 @@ Licence: CC-BY 3.0  - https://creativecommons.org/licenses/by/3.0/
 Edits: Dylan Chopped each emphisized shot into a tiny clip to make realistic gun shots when triggered.
 
 ---
+Cardboard Box
+Author: newagesoup
+link: https://freesound.org/people/newagesoup/sounds/364740/
 
+licence: Creative Commons 0 (CC0)
+Edits: None
+![alt text](image.png)
+---
 Dylan Austin
 AntSoldierGameMastered.wav
 
