@@ -7,6 +7,7 @@ from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
 from GameScripts.UI.damage_flash import DamageFlash
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
+import random
 
 def draw_ui(screen, player):
 
@@ -35,6 +36,25 @@ def draw_ui(screen, player):
     screen.blit(ammo_text, (60, 69))
 
 pygame.init()
+
+# Load background music
+pygame.mixer.music.load("Assets/Audio/Background/AntSoldierGameMastered.wav")
+pygame.mixer.music.play(-1)
+
+# Walk sound effects
+walk1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL1.ogg")
+walk2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL2.ogg")
+walk3 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL3.ogg")
+walk4 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR1.ogg")
+walk5 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR2.ogg")
+walk6 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR3.ogg")
+
+# shooting sound effects
+shot1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/shotgun.wav")
+shot2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/rifle.wav")
+
+shoot_sounds = [shot1, shot2]
+walk_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -140,6 +160,7 @@ while running:
                     player.face_towards(direction)
                     
                     shooting.fire(player.pos, direction)
+                    random.choice(shoot_sounds).play()
                     player.ammo -= 1
                     print(player.ammo)
 
