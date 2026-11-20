@@ -76,3 +76,10 @@
 - I did not full understand how to implement this and the project architecture has already become quite large
 - a quick Kiro prompt resolved this issue for how the player and spiders read and call animations. The scripts now no longer read images from disk every time animations change
 ![alt text](image-6.png)
+
+---
+
+### Without Kiro I had other AI help me keep shooting only available after animation has ended
+- I tried this before and I couldn't get it to work
+- I tried to do it by monitoring if shooting sound effect was playing - to no avail though
+- AI helped in the end because I had two seperate things going on in the program loop and the player class. So AI wired both systems together to only shoot after sound effect is finished and after the last frame of the previous shooting animation.

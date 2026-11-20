@@ -1,5 +1,6 @@
 import pygame
 from GameScripts.sprite_cache import load as load_sprite
+import random
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
@@ -20,6 +21,7 @@ class Spider(pygame.sprite.Sprite):
         self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
+        self.speed = random.randint(135, 220)
         # Animation
         self.facing = "camera_facing"
         self.moving = False
@@ -105,7 +107,7 @@ class Spider(pygame.sprite.Sprite):
             direction = direction.normalize()
 
             # Move towards player
-            self.pos += direction * PLAYER_SPEED * dt
+            self.pos += direction * self.speed * dt
 
             # Sync rect with world position
             self.rect.center = (

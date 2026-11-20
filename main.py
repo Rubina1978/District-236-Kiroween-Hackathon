@@ -69,6 +69,9 @@ shoot_channel = pygame.mixer.Channel(2)
 shoot_sounds = [shot1, shot2]
 walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
+cardboard_box = pygame.mixer.Sound("Assets/Audio/SoundFX/Box/cardboard_box.wav")
+ouch = pygame.mixer.Sound("Assets/Audio/SoundFX/Combat/ouch.wav")
+
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
@@ -173,12 +176,15 @@ while running:
                     # so only continue when the vector has some length. 
                     if direction.length_squared() > 0:
                         direction = direction.normalize()
-                        print(direction)
+                        # Commented out print(direction) and print(ammo)because the terminal builds garbage 
+                        # memory/stack overflow or something like that
+                        # I'm not pro, don't quote me on terminology!! lululul
+                        # print(direction)
                         player.face_towards(direction)
                         player.start_shooting()
                         shooting.fire(player.pos, direction)
                         player.ammo -= 1
-                        print(player.ammo)
+                        # print(player.ammo)
 
     # Read the keyboard state every frame and pass it to the player. Holding a
     # key moves continuously; the player switches to run while held and idle on
@@ -210,6 +216,7 @@ while running:
     # Pass it to the popup so the icon appears in the corner.
     reward = player.last_reward
     if reward:
+        cardboard_box.play()
         reward_popup.show(reward)
         player.last_reward = None
     
@@ -235,6 +242,7 @@ while running:
 
     # A spider bit the ant this frame: start the red flash, then clear the flag.
     if player.just_hit:
+        ouch.play()
         damage_flash.trigger()
         player.just_hit = False
 

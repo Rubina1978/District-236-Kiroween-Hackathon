@@ -4,7 +4,7 @@ from ..animator_controller import animator_interface
 
 class PoolingSystem:
 
-    def __init__(self, pool_size=10):
+    def __init__(self, pool_size=25):
 
         self.deactivated = [
             Spider(animator=animator_interface("spider"))
