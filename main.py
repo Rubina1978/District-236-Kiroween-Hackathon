@@ -19,7 +19,7 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())
 # Load Player & set position.
 # Player loads all of its animation frames once when it is created.
 player = Player(animator=animator_interface(type="player"), pos=player_pos)
-
+print("Starting ammo:", player.ammo)
 # Holds every bullet that is currently flying.
 shooting = Shooting()
 
@@ -67,7 +67,13 @@ while running:
             running = False
         # MOUSEBUTTONDOWN fires once per click. button 1 is the left button.
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            shooting.fire(player.pos, player.facing)
+            if player.ammo > 0:
+                shooting.fire(player.pos, player.facing)
+                player.ammo -= 1
+                print(player.ammo)
+                
+            
+
 
     # Read the keyboard state every frame and pass it to the player. Holding a
     # key moves continuously; the player switches to run while held and idle on
@@ -106,9 +112,9 @@ while running:
     # Move and draw the bullets. This comes after custom_draw because that call
     # updates the camera, and bullets need the camera offset to be drawn in the
     # right place on screen.
+    shooting.update(dt)
     camera_offset = camera_group.get_camera().offset
     for bullet in shooting.bullets:
-        bullet.update(dt)
         bullet.draw(screen, camera_offset)
 
     for spider in camera_group.enemy_pool.get_activated_enemies():

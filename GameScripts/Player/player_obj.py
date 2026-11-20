@@ -7,6 +7,7 @@ ANIMATION_COOLDOWN = 100
 
 
 class Player(pygame.sprite.Sprite):
+    
     """The ant the player controls.
 
     Extends pygame.sprite.Sprite so it has .image and .rect and can be added
@@ -27,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.frame_index = 0
         # The time (in ms, from pygame.time.get_ticks()) we last switched frames.
         self.update_time = 0
+        self.life = 3
 
         # Facing + movement state. We only swap animations when one of these
         # actually changes, so we don't reload frames from disk every frame.
