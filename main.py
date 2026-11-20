@@ -7,6 +7,32 @@ from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 
+def draw_ui(screen, player):
+
+    # Health icon
+    screen.blit(heart_icon, (20, 20))
+
+    # Health counter
+    health_text = ui_font.render(
+        f"{player.lifeline.lives}/{player.lifeline.max_lives}",
+        True,
+        (255, 255, 255)
+    )
+
+    screen.blit(health_text, (60, 24))
+
+    # Ammo icon
+    screen.blit(ammo_icon, (20, 65))
+
+    # Ammo counter
+    ammo_text = ui_font.render(
+        str(player.ammo),
+        True,
+        (255, 255, 255)
+    )
+
+    screen.blit(ammo_text, (60, 69))
+
 pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -21,6 +47,23 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())
 # Player loads all of its animation frames once when it is created.
 player = Player(animator=animator_interface(type="player"), pos=player_pos)
 print("Starting ammo:", player.ammo)
+
+# Load UI icons
+heart_icon = pygame.image.load(
+    "Assets/Artwork/Icons/Heart.png"
+).convert_alpha()
+
+ammo_icon = pygame.image.load(
+    "Assets/Artwork/Icons/ShotgunShells.png"
+).convert_alpha()
+
+# Resize icons (optional)
+heart_icon = pygame.transform.scale(heart_icon, (32, 32))
+ammo_icon = pygame.transform.scale(ammo_icon, (32, 32))
+
+# Font for UI counters
+ui_font = pygame.font.Font(None, 32)
+
 # Holds every bullet that is currently flying.
 shooting = Shooting()
 
@@ -63,6 +106,10 @@ while running:
     # dt is delta time in seconds. Movement uses this so speed does not depend
     # on the frame rate.
     dt = clock.tick(FPS) / 1000
+
+    if player.lifeline.is_dead():
+        print("You died... Game Over")
+        running = False
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -141,6 +188,9 @@ while running:
     # Advance the popup timer and draw it on top of everything.
     reward_popup.update(dt)
     reward_popup.draw(screen)
+
+    # Icons/UI (User Interface)
+    draw_ui(screen, player)
     
     # flip() the display to put work on screen
     pygame.display.flip()
