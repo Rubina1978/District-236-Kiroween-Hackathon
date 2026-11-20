@@ -3,6 +3,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from GameScripts.camera import Camera
 from GameScripts.Sprites.floor_pattern import build_floor_pattern
 from GameScripts.Enemies.pooling_system import PoolingSystem
+from GameScripts.lighting_controller import LightingController
 import random
 
 
@@ -11,6 +12,10 @@ class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self, display_surface):
         super().__init__()
 
+        self.lighting = LightingController(
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT
+        )
         self.spawn_interval = 3000  # 3 seconds, milliseconds
         self.last_spawn_time = pygame.time.get_ticks()
 
@@ -103,6 +108,12 @@ class YSortCameraGroup(pygame.sprite.Group):
                 sprite.image,
                 offset_rect
             )
+        
+        self.lighting.draw(
+            self.display_surface,
+            player,
+            self.camera
+        )
 
     def get_camera(self):
         return self.camera

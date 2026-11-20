@@ -2,7 +2,7 @@ import pygame
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
-PLAYER_SPEED = 240
+PLAYER_SPEED = 125
 ANIMATION_COOLDOWN = 100
 class Spider(pygame.sprite.Sprite):
     def __init__(self, animator):
@@ -93,6 +93,10 @@ class Spider(pygame.sprite.Sprite):
 
         else:
             new_moving = False
+            if player.life > 0:
+                player.take_life()
+            else:
+                player.kill_player()
 
         # Determine facing direction.
         # Diagonals must be checked before cardinals.
