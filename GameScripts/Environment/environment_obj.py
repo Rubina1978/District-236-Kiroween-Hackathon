@@ -2,6 +2,7 @@ import pygame
 import random
 from settings import ENV_SPRITE_SCALES, ENV_DEFAULT_SCALE
 from GameScripts.items import Items
+from GameScripts.sprite_cache import load as load_sprite
 
 class EnvrionmentObject(pygame.sprite.Sprite):
     """A piece of the environment (tree, rock, bush, box) drawn on the map.
@@ -47,7 +48,7 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         else:
             path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
-        self.image = pygame.image.load(path).convert_alpha()
+        self.image = load_sprite(path)
         # Double the size of every map sprite (trees, rocks, bushes, boxes).
         # scale2x is made for pixel art and makes the image exactly 2x bigger.
         # The player is loaded separately in player_obj.py, so it is unaffected.
@@ -140,9 +141,7 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         self.animation = self.animator.box_open
 
         self.frames = [
-            pygame.transform.scale2x(
-                pygame.image.load(path).convert_alpha()
-            )
+            pygame.transform.scale2x(load_sprite(path))
             for path in self.animation
         ]
 

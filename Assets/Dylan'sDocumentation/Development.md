@@ -70,3 +70,9 @@
 
 - However I couldn't understand how to make the spiders die and why bullet collisions were not responsive in the right way, and Kiro managed to wire it better
 ![alt text](image-5.png)
+
+
+### I heard about sprite / animation caching to save performance
+- I did not full understand how to implement this and the project architecture has already become quite large
+- a quick Kiro prompt resolved this issue for how the player and spiders read and call animations. The scripts now no longer read images from disk every time animations change
+![alt text](image-6.png)

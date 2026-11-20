@@ -1,9 +1,11 @@
 import pygame
+from GameScripts.sprite_cache import load as load_sprite
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
 PLAYER_SPEED = 125
 ANIMATION_COOLDOWN = 100
+ATTACK_COOLDOWN = 100
 
 # How long (ms) to wait after the death animation finishes before the spider
 # is returned to the pool. Gives the last frame time to be visible.
@@ -26,7 +28,7 @@ class Spider(pygame.sprite.Sprite):
         self.animation = animator.idle()
 
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in self.animation
         ]
 
@@ -115,10 +117,7 @@ class Spider(pygame.sprite.Sprite):
 
         else:
             new_moving = False
-            if not player.lifeline.is_dead():
-                player.take_life()
-            else:
-                player.kill_player()
+            self.attack_player(player=player)
 
         # Determine facing direction.
         # Diagonals must be checked before cardinals.
@@ -173,13 +172,24 @@ class Spider(pygame.sprite.Sprite):
 
             else:
                 self.set_animator_idle(new_facing)
+    
+    def attack_player(self, player):
+        # need some kinf of delay system
+        wait_time = pygame.time.get_ticks()
+
+        if pygame.time.get_ticks() - wait_time > 1000:
+            if not player.lifeline.is_dead():
+                player.take_life()
+            else:
+                player.kill_player()
+        wait_time = pygame.time.get_ticks()
 #-----------------------------------------------------------------------------------------------
 # IMPORTANT
 #----------------------------------------------------------------------------------------
 
     def _reload_frames(self, paths):
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in paths
         ]
         self.frame_index = 0
@@ -256,7 +266,7 @@ class Spider(pygame.sprite.Sprite):
         # Reset animation
         self.animation = self.animator.idle()
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in self.animation
         ]
 
