@@ -42,19 +42,30 @@ pygame.mixer.music.load("Assets/Audio/Background/AntSoldierGameMastered.wav")
 pygame.mixer.music.play(-1)
 
 # Walk sound effects
-walk1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL1.ogg")
-walk2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL2.ogg")
-walk3 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandL3.ogg")
-walk4 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR1.ogg")
-walk5 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR2.ogg")
-walk6 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-SandR3.ogg")
+walk1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneL1.ogg")
+walk2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneL2.ogg")
+walk3 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneL3.ogg")
+walk4 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR1.ogg")
+walk5 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR2.ogg")
+walk6 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneR3.ogg")
+
+walk1.set_volume(0.10)
+walk2.set_volume(0.10)
+walk3.set_volume(0.10)
+walk4.set_volume(0.10)
+walk5.set_volume(0.10)
+walk6.set_volume(0.10)
+
+walk_channel = pygame.mixer.Channel(1)
 
 # shooting sound effects
 shot1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/shotgun.wav")
 shot2 = pygame.mixer.Sound("Assets/Audio/SoundFX/Shoot/shots/rifle.wav")
+shot1.set_volume(0.5)
+shot2.set_volume(0.5)
 
 shoot_sounds = [shot1, shot2]
-walk_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
+walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -168,6 +179,11 @@ while running:
     # key moves continuously; the player switches to run while held and idle on
     # release. Movement logic lives in player_obj, so the loop stays short.
     keys = pygame.key.get_pressed()
+
+    if keys:
+        if not walk_channel.get_busy():
+            walk_sound = random.choice(walking_sounds)
+            walk_channel.play(walk_sound)
 
     # for boundary in boundaries:
     #     if player.is_near(boundary):
