@@ -265,3 +265,11 @@ class Player(pygame.sprite.Sprite):
                     return True
 
         return False
+
+# ---------------------------
+    def take_life(self):
+        self.life -= 1
+        print(f"Lost a life! You have {self.life} lives remaining!")
+    def kill_player(self):
+        is_dead = True
+        print("Player is Dead")

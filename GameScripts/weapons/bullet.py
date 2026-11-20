@@ -1,8 +1,8 @@
 import pygame
 
 # Orange-yellow, and the bullet size in pixels.
-BULLET_COLOR = (255, 190, 51)
-BULLET_RADIUS = 4
+BULLET_COLOR = (0, 0, 0)
+BULLET_RADIUS = 2
 
 
 class Bullet:
@@ -33,3 +33,10 @@ class Bullet:
     def is_too_far(self):
         # True once the bullet has flown past its maximum range.
         return self.distance_travelled() > self.max_distance
+    
+    def is_near(self, obj, distance=15):
+
+        bullet_pos = self.position
+        object_pos = pygame.Vector2(obj.rect.midbottom)
+
+        return bullet_pos.distance_to(object_pos) <= distance

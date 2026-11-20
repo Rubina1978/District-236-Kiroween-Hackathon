@@ -97,6 +97,16 @@ while running:
         box.update_animation()
     
     player.update_animation()
+
+    # Spawn enemies
+    camera_group.spawn_enemy()
+
+    # Update enemies
+    for spider in camera_group.enemy_pool.get_activated_enemies():
+
+        spider.move(dt, player)
+        spider.update_animation()
+
     camera_group.custom_draw(player)
 
     # Move and draw the bullets. This comes after custom_draw because that call
@@ -107,6 +117,15 @@ while running:
     for bullet in shooting.bullets:
         bullet.draw(screen, camera_offset)
 
+    for spider in camera_group.enemy_pool.get_activated_enemies():
+        spider.move(dt, player)
+        spider.update_animation()
+
+    for bullet in shooting.bullets:
+        for spider in camera_group.enemy_pool.get_activated_enemies():
+            if bullet.is_near(obj=spider):
+                spider.kill_spider()
+    
     # flip() the display to put work on screen
     pygame.display.flip()
 
