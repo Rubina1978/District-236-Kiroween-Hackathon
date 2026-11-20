@@ -1,4 +1,5 @@
 import pygame
+from GameScripts.sprite_cache import load as load_sprite
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
@@ -27,7 +28,7 @@ class Spider(pygame.sprite.Sprite):
         self.animation = animator.idle()
 
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in self.animation
         ]
 
@@ -188,7 +189,7 @@ class Spider(pygame.sprite.Sprite):
 
     def _reload_frames(self, paths):
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in paths
         ]
         self.frame_index = 0
@@ -265,7 +266,7 @@ class Spider(pygame.sprite.Sprite):
         # Reset animation
         self.animation = self.animator.idle()
         self.frames = [
-            pygame.image.load(path).convert_alpha()
+            load_sprite(path)
             for path in self.animation
         ]
 
