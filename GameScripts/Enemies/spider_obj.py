@@ -212,6 +212,9 @@ class Spider(pygame.sprite.Sprite):
             self.animation = self.animator.move_rightTop()
         self._reload_frames(self.animation)
     
+    def set_animator_death(self):
+        self.animation = self.animator.death()
+    
     def reset(self, position):
         """Reset the spider when it is retrieved from the object pool."""
 
@@ -242,3 +245,6 @@ class Spider(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(
             center=self.pos
         )
+    
+    def kill_spider(self):
+        self.is_dead = True

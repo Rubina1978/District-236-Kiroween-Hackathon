@@ -121,6 +121,11 @@ while running:
         spider.move(dt, player)
         spider.update_animation()
 
+    for bullet in shooting.bullets:
+        for spider in camera_group.enemy_pool.get_activated_enemies():
+            if bullet.is_near(obj=spider):
+                spider.kill_spider()
+    
     # flip() the display to put work on screen
     pygame.display.flip()
 

@@ -125,7 +125,6 @@ class YSortCameraGroup(pygame.sprite.Group):
 
         # Check whether enough time has passed
         if current_time - self.last_spawn_time >= self.spawn_interval:
-
             # Check maximum active spider count
             if len(self.enemy_pool.activated) < self.max_spiders:
 
