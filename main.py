@@ -72,12 +72,25 @@ while running:
         # MOUSEBUTTONDOWN fires once per click. button 1 is the left button.
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if player.ammo > 0:
-                shooting.fire(player.pos, player.facing)
-                player.ammo -= 1
-                print(player.ammo)
-                
-            
+                # where the cursor is on the screen
+                mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
 
+                # Screen to world: Add how far the camera has scrolled
+                mouse_world = mouse_screen + camera_group.get_camera().offset
+                
+                # Direction from the ant to the cursor
+                direction = mouse_world - player.pos
+
+                # normalise() fails on a zero-length vector (a click exactly on the ant),\
+                # so only continue when the vector has some length. 
+                if direction.length_squared() > 0:
+                    direction = direction.normalize()
+                    print(direction)
+                    player.face_towards(direction)
+                    
+                    shooting.fire(player.pos, direction)
+                    player.ammo -= 1
+                    print(player.ammo)
 
     # Read the keyboard state every frame and pass it to the player. Holding a
     # key moves continuously; the player switches to run while held and idle on
@@ -124,9 +137,11 @@ while running:
     # updates the camera, and bullets need the camera offset to be drawn in the
     # right place on screen.
     shooting.update(dt)
-    camera_offset = camera_group.get_camera().offset
+    camera_group.get_camera().offset
+    player_pos - camera_group.get_camera().offset
+    player_pos.normalize()
     for bullet in shooting.bullets:
-        bullet.draw(screen, camera_offset)
+        bullet.draw(screen, camera_group.get_camera().offset)
 
     # Return fully-dead spiders to the pool so they can be reused.
     camera_group.enemy_pool.check_dead()
