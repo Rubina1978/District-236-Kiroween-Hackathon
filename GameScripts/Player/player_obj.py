@@ -122,7 +122,7 @@ class Player(pygame.sprite.Sprite):
 
         self.set_animator_shoot(self.facing)
 
-    def move(self, dt, keys, boundaries, boxes):
+    def move(self, dt, keys, boundaries, boxes, alcohol):
         """Move the ant based on held keys and keep its facing/animation in sync.
 
         dt is delta time in seconds; multiplying speed by dt keeps the speed the
@@ -149,7 +149,7 @@ class Player(pygame.sprite.Sprite):
             self.pos.x += direction.x * PLAYER_SPEED * dt
             self.rect.centerx = round(self.pos.x)
 
-            if self.check_collision(boundaries=boundaries, boxes=None):
+            if self.check_collision(boundaries=boundaries, boxes=None, alcohol=None):
                 self.pos.x = old_x
                 self.rect.centerx = round(self.pos.x)
 
@@ -158,12 +158,18 @@ class Player(pygame.sprite.Sprite):
             self.pos.y += direction.y * PLAYER_SPEED * dt
             self.rect.centery = round(self.pos.y)
 
-            if self.check_collision(boundaries=boundaries, boxes=None):
+            if self.check_collision(boundaries=boundaries, boxes=None, alcohol=None):
                 self.pos.y = old_y
                 self.rect.centery = round(self.pos.y)
             
-            if self.check_collision(boundaries=None, boxes=boxes):
+            if self.check_collision(boundaries=None, boxes=boxes, alcohol=None):
                 pass
+
+            if self.check_collision(boundaries=None, boxes=None, alcohol=alcohol):
+                self.pos.y = old_y
+                self.rect.centery = round(self.pos.y)
+                self.pos.x = old_x
+                self.rect.centerx = round(self.pos.x)
 
             new_moving = True
 
@@ -358,7 +364,7 @@ class Player(pygame.sprite.Sprite):
 
         return player_pos.distance_to(object_pos) <= distance
     
-    def check_collision(self, boundaries, boxes):
+    def check_collision(self, boundaries, boxes, alcohol):
 
         if boxes != None:
             for box in boxes:
@@ -378,6 +384,10 @@ class Player(pygame.sprite.Sprite):
 
                 if self.rect.colliderect(boundary.rect):
                     return True
+        
+        if alcohol != None:
+            if self.rect.colliderect(alcohol.rect):
+                print("Collision with Alcohol Bottle")
 
         return False
 
@@ -434,14 +444,14 @@ class Player(pygame.sprite.Sprite):
         old_x = self.pos.x
         self.pos.x += step.x
         self.rect.centerx = round(self.pos.x)
-        if self.check_collision(boundaries=boundaries, boxes=None):
+        if self.check_collision(boundaries=boundaries, boxes=None, alcohol=None):
             self.pos.x = old_x
             self.rect.centerx = round(self.pos.x)
 
         old_y = self.pos.y
         self.pos.y += step.y
         self.rect.centery = round(self.pos.y)
-        if self.check_collision(boundaries=boundaries, boxes=None):
+        if self.check_collision(boundaries=boundaries, boxes=None, alcohol=None):
             self.pos.y = old_y
             self.rect.centery = round(self.pos.y)
         print(f"Lost a life! You have {self.lifeline.lives} lives remaining!")

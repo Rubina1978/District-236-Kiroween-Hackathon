@@ -35,6 +35,17 @@ def draw_ui(screen, player):
 
     screen.blit(ammo_text, (60, 69))
 
+    # For boxes opened
+    screen.blit(box_icon, (20, 115))
+
+    box_text = ui_font.render(
+        f"{times_boxes_opened}/100",
+        True,
+        (255, 255, 255)
+    )
+
+    screen.blit(box_text, (60, 115))
+
 pygame.init()
 
 # Load background music
@@ -95,9 +106,14 @@ ammo_icon = pygame.image.load(
     "Assets/Artwork/Icons/ShotgunShells.png"
 ).convert_alpha()
 
+box_icon = pygame.image.load(
+    "Assets/Artwork/Environment/Objects/Box/box_1.png"
+)
+
 # Resize icons (optional)
 heart_icon = pygame.transform.scale(heart_icon, (32, 32))
 ammo_icon = pygame.transform.scale(ammo_icon, (32, 32))
+box_icon = pygame.transform.scale(box_icon, (32, 32))
 
 # Font for UI counters
 ui_font = pygame.font.Font(None, 32)
@@ -116,15 +132,20 @@ current_map = world_build(False)
 tile_map = world_build(True)
 boundaries = []
 boxes = []
+times_boxes_opened = 0
 
 # Camera group with y-sorting: the player and the environment are drawn together
 # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
 camera_group = YSortCameraGroup(screen)
 camera_group.add(player)
 
+alcohol_bottle = None
+has_bottle_spawned = False
 for sprite in current_map.get_sprites():
     if sprite.type != "alcohol":
         camera_group.add(sprite)
+    else:
+        alcohol_bottle = sprite
 
 for sprite in tile_map.get_sprites():
     camera_group.ground_sprites.add(sprite)
@@ -140,6 +161,7 @@ for row in current_map.grid:
         if obj != 0 and obj.get_type() == "box":
             boxes.append(obj)
 
+print(len(boxes))
 
 # -------------------------------------------------------------------------------------------
 # Main game engine loop
@@ -212,7 +234,7 @@ while running:
     #         print("you are near boundary")
     #         player.push_back(boundary)
     
-    player.move(dt, keys, boundaries, boxes)
+    player.move(dt, keys, boundaries, boxes, alcohol_bottle)
 
     # check_collision returns the reward string when a fresh box is opened.
     # Pass it to the popup so the icon appears in the corner.
@@ -221,6 +243,7 @@ while running:
         cardboard_box.play()
         reward_popup.show(reward)
         player.last_reward = None
+        times_boxes_opened += 1
     
 
     # fill the screen with a colour to wipe away anything from last frame
@@ -280,6 +303,10 @@ while running:
 
     # Icons/UI (User Interface)
     draw_ui(screen, player)
+
+    # Last bit - Just to spawn the bottle
+    if has_bottle_spawned == False and times_boxes_opened >= 100:
+        camera_group.add(alcohol_bottle)
     
     # flip() the display to put work on screen
     pygame.display.flip()
