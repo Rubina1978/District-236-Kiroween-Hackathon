@@ -1,4 +1,5 @@
 from .environment_obj import EnvrionmentObject
+from ..EndGame.Alcohol_Bottle import Alcohol
 from GameScripts.animator_controller import animator_interface
 from settings import TILE_SIZE
 import random, math
@@ -16,6 +17,8 @@ def build_environment(rows=18 *4, cols=31 * 4):
         x = (c - r) * (120 / 2)
         y = (c + r) * (60 / 2)
         environment_map[r][c] = generate_envrionment_obj(x, y)
+    
+    environment_map[15 * 4][28 * 4] = generate_alcohol()
 
     return environment_map
 
@@ -36,3 +39,7 @@ def generate_envrionment_obj(x, y):
         return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=animator_interface(random_type))
     else:
         return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=None)
+
+def generate_alcohol():
+    image = "Assets/Artwork/Environment/Objects/JDBottle/JackDaniels.png"
+    return Alcohol(image=image)

@@ -4,7 +4,6 @@ import random
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
-PLAYER_SPEED = 125
 ANIMATION_COOLDOWN = 100
 ATTACK_COOLDOWN = 100
 
@@ -21,7 +20,7 @@ class Spider(pygame.sprite.Sprite):
         self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
-        self.speed = random.randint(135, 220)
+        self.speed = random.randint(200, 250)
         # Animation
         self.facing = "camera_facing"
         self.moving = False

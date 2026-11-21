@@ -16,7 +16,7 @@ class YSortCameraGroup(pygame.sprite.Group):
             SCREEN_WIDTH,
             SCREEN_HEIGHT
         )
-        self.spawn_interval = 3000  # 3 seconds, milliseconds
+        self.spawn_interval = 1000  # 3 seconds, milliseconds
         self.last_spawn_time = pygame.time.get_ticks()
 
         self.max_spiders = 10
