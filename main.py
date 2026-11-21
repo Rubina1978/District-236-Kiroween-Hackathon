@@ -70,6 +70,7 @@ shoot_sounds = [shot1, shot2]
 walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
 cardboard_box = pygame.mixer.Sound("Assets/Audio/SoundFX/Box/cardboard_box.wav")
+cardboard_box.set_volume(0.55)
 ouch = pygame.mixer.Sound("Assets/Audio/SoundFX/Combat/ouch.wav")
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
