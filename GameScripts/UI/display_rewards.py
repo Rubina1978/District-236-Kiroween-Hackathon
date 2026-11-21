@@ -19,11 +19,10 @@ LOGO_SIZE = 140
 REWARD_ICONS = {
     "ammo":          "Assets/Artwork/Icons/ShotgunShells.png",
     "life":          "Assets/Artwork/Icons/Heart.png",
-    "health_potion": "Assets/Artwork/Icons/FirstAid.png",
     # "spider" and "empty" have no icon — no popup is shown for them.
 }
 
-AMAZON_LOGO_PATH = "Assets/Artwork/Icons/Amazon Halloween logo.png"
+AMAZON_LOGO_PATH = "Assets/Artwork/Icons/Pennine.png"
 
 
 class RewardPopup:
