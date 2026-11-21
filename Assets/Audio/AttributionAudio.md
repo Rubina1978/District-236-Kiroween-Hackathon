@@ -18,13 +18,20 @@ Author: newagesoup
 link: https://freesound.org/people/newagesoup/sounds/364740/
 
 licence: Creative Commons 0 (CC0)
-Edits: None
+Edits: Dylan made no edits
 ![alt text](image.png)
 
 ---
 oh sh-t by xtrgamr
 licence: Creative Commons 4 (CC4) - have to attribute
 link: https://freesound.org/people/xtrgamr/sounds/278895/
+Edits: Dylan made no edits
+
+---
+Splat/Squish by mrickey13
+Link: https://freesound.org/s/515621/ 
+License: Creative Commons 0
+Edits: Dylan made no edits
 ---
 Dylan Austin
 AntSoldierGameMastered.wav

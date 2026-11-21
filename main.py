@@ -78,6 +78,9 @@ shot2.set_volume(0.25)
 shoot_channel = pygame.mixer.Channel(2)
 
 shoot_sounds = [shot1, shot2]
+
+squash = pygame.mixer.Sound("Assets/Audio/SoundFX/Combat/squash.wav")
+squash.set_volume(0.8)
 walking_sounds = [walk1, walk2, walk3, walk4, walk5, walk6]
 
 cardboard_box = pygame.mixer.Sound("Assets/Audio/SoundFX/Box/cardboard_box.wav")
@@ -290,6 +293,7 @@ while running:
         for spider in camera_group.enemy_pool.get_activated_enemies():
             if not spider.dying and bullet.hits(spider):
                 spider.kill_spider()
+                squash.play()
                 shooting.bullets.remove(bullet)
                 break  # one bullet kills one spider; stop checking this bullet
 
