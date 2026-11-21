@@ -6,6 +6,7 @@ from GameScripts.Sprites.y_sort import YSortCameraGroup
 from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
 from GameScripts.UI.damage_flash import DamageFlash
+from GameScripts.score import Score
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 import random
 
@@ -55,9 +56,50 @@ def draw_ui(screen, player):
         )
 
         screen.blit(extraction_text, (20, 160))
+    
+    if perma_multiplier != 0:
+        multiplier_text = ui_font.render(
+            f"x{perma_multiplier}",
+            True,
+            (255, 215, 0)
+        )
+        screen.blit(multiplier_text, (750, 680))
+    elif player.multiplier == 1:
+        multiplier_text = ui_font.render(
+            f"",
+            True,
+            (211, 211, 211)
+        )
+        screen.blit(multiplier_text, (750, 680))
+    elif player.multiplier == 2:
+        multiplier_text = ui_font.render(
+            f"x{player.multiplier}",
+            True,
+            (255, 255, 255)
+        )
+        screen.blit(multiplier_text, (750, 680))
+    elif player.multiplier == 4:
+        multiplier_text = ui_font.render(
+            f"x{player.multiplier}",
+            True,
+            (60, 170, 215)
+        )
+        screen.blit(multiplier_text, (750, 680))
+        
+    
+    # For displaying the player score for the session
+    score_text = ui_font.render(
+        f"Score: {score.return_points()}",
+        True,
+        (255, 255, 255)
+    )
+
+    screen.blit(score_text, (900, 680))
 
 pygame.init()
 
+score = Score()
+perma_multiplier = 0
 # Load background music
 pygame.mixer.music.load("Assets/Audio/Background/AntSoldierGameMastered.wav")
 pygame.mixer.music.play(-1)
@@ -190,6 +232,8 @@ while running:
     if player.lifeline.is_dead():
         print("You died... Game Over")
         running = False
+    
+    multiplier = player.multiplier
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -307,6 +351,10 @@ while running:
             if not spider.dying and bullet.hits(spider):
                 spider.kill_spider()
                 squash.play()
+                if perma_multiplier == 0:
+                    score.give_points(2, multiplier)
+                else:
+                    score.give_points(2, perma_multiplier)
                 shooting.bullets.remove(bullet)
                 break  # one bullet kills one spider; stop checking this bullet
     
@@ -325,6 +373,7 @@ while running:
         # Only set the start time once
         if start_time is None:
             start_time = pygame.time.get_ticks()
+            perma_multiplier = 8
 
         # Update timer EVERY frame
         current_time = pygame.time.get_ticks()

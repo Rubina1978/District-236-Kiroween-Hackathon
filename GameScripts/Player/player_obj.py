@@ -73,6 +73,9 @@ class Player(pygame.sprite.Sprite):
         # Tracks whether the shooting animation has reached its final frame.
         self.shoot_finished = False
 
+        # For scoring
+        self.multiplier = 1
+
         # for end game
         self.can_trigger_extraction = False
         self.bottle_in_game = False

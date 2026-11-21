@@ -12,3 +12,9 @@
 
 ---
 ### Let us consider this later
+
+---
+
+### Upon Reflection
+
+- I think we could get away with a private django project that is seperate from this hackathon repo, and can be hosted on heroku. This means that in game, we can call an endpoint. Just like if you were using django as back end for a react-native application for mobile. We will need **Django REST Framework**

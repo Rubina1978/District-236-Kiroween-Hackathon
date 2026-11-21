@@ -4,7 +4,7 @@ import random
 
 class Items:
     def __init__(self):
-        self.random_choices = ["ammo", "health_potion", "life", "spider", "empty"] 
+        self.random_choices = ["ammo", "x2", "life", "x4", "empty", "x1"] 
         self.reward = None
         
     
@@ -13,10 +13,12 @@ class Items:
             player.ammo += 10
         elif reward == "life":
             player.lifeline.gain()
-        elif reward == "health_potion":
-            pass
-        elif reward == "spider":
-            pass
+        elif reward == "x2":
+            player.multiplier = 2
+        elif reward == "x4":
+            player.multiplier = 4
+        elif reward == "x1":
+            player.multiplier = 1
 
     def box_opened(self, player):
         self.reward = random.choice(self.random_choices)
