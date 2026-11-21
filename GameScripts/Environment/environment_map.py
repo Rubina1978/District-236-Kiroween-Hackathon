@@ -18,7 +18,15 @@ def build_environment(rows=18 *4, cols=31 * 4):
         y = (c + r) * (60 / 2)
         environment_map[r][c] = generate_envrionment_obj(x, y)
     
-    environment_map[15 * 4][28 * 4] = generate_alcohol()
+
+    # for generating the alcohol bottle with co-ordinates
+    r = 15 * 4
+    c = 28 * 4
+
+    x = (c - r) * (120 / 2)
+    y = (c + r) * (60 / 2)
+
+    environment_map[r][c] = generate_alcohol(x, y)
 
     return environment_map
 
@@ -40,6 +48,6 @@ def generate_envrionment_obj(x, y):
     else:
         return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=None)
 
-def generate_alcohol():
+def generate_alcohol(x, y):
     image = "Assets/Artwork/Environment/Objects/JDBottle/JackDaniels.png"
-    return Alcohol(image=image)
+    return Alcohol(image=image, x=x, y=y)

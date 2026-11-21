@@ -20,7 +20,7 @@ class Spider(pygame.sprite.Sprite):
         self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
-        self.speed = random.randint(200, 250)
+        self.speed = random.randint(180, 240)
         # Animation
         self.facing = "camera_facing"
         self.moving = False

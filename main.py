@@ -123,7 +123,8 @@ camera_group = YSortCameraGroup(screen)
 camera_group.add(player)
 
 for sprite in current_map.get_sprites():
-    camera_group.add(sprite)
+    if sprite.type != "alcohol":
+        camera_group.add(sprite)
 
 for sprite in tile_map.get_sprites():
     camera_group.ground_sprites.add(sprite)
