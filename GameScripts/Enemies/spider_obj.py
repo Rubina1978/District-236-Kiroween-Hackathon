@@ -1,6 +1,7 @@
 import pygame
 from GameScripts.sprite_cache import load as load_sprite
 import random
+import math
 # ImportError: attempted relative import beyond top-level package
 # from ...settings import PLAYER_SPEED
 
@@ -20,7 +21,7 @@ class Spider(pygame.sprite.Sprite):
         self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
-        self.speed = random.randint(180, 240)
+        self.speed = random.randint(240, 280)
         # Animation
         self.facing = "camera_facing"
         self.moving = False
@@ -120,40 +121,40 @@ class Spider(pygame.sprite.Sprite):
             new_moving = False
             self.attack_player(player=player)
 
-        # Determine facing direction.
-        # Diagonals must be checked before cardinals.
-
+        # Determine facing direction
         dx = direction.x if distance > stopping_distance else 0
         dy = direction.y if distance > stopping_distance else 0
 
         if dx == 0 and dy == 0:
-
             new_facing = self.facing
 
-        elif dx < 0 and dy < 0:
-            new_facing = "leftTop_facing"
-
-        elif dx > 0 and dy < 0:
-            new_facing = "rightTop_facing"
-
-        elif dx < 0 and dy > 0:
-            new_facing = "leftBottom_facing"
-
-        elif dx > 0 and dy > 0:
-            new_facing = "rightBottom_facing"
-
-        elif dy < 0:
-            new_facing = "forward_facing"
-
-        elif dy > 0:
-            new_facing = "camera_facing"
-
-        elif dx < 0:
-            new_facing = "left_facing"
-
         else:
-            new_facing = "right_facing"
+            angle = math.degrees(math.atan2(dy, dx))
 
+            if -22.5 <= angle < 22.5:
+                new_facing = "right_facing"
+
+            elif 22.5 <= angle < 67.5:
+                new_facing = "rightBottom_facing"
+
+            elif 67.5 <= angle < 112.5:
+                new_facing = "camera_facing"
+
+            elif 112.5 <= angle < 157.5:
+                new_facing = "leftBottom_facing"
+
+            elif angle >= 157.5 or angle < -157.5:
+                new_facing = "left_facing"
+
+            elif -157.5 <= angle < -112.5:
+                new_facing = "leftTop_facing"
+
+            elif -112.5 <= angle < -67.5:
+                new_facing = "forward_facing"
+
+            else:
+                new_facing = "rightTop_facing"
+        
         new_flip = False
 
         # Only change animation when necessary

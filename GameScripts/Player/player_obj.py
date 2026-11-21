@@ -389,10 +389,9 @@ class Player(pygame.sprite.Sprite):
                 if self.rect.colliderect(boundary.rect):
                     return True
         
-        if alcohol != None and self.bottle_in_game == True:
+        if alcohol != None and self.bottle_in_game == True and self.can_trigger_extraction == False:
             if self.rect.colliderect(alcohol.rect):
                 self.can_trigger_extraction = True
-                print("Collision with Alcohol Bottle")
 
         return False
 
