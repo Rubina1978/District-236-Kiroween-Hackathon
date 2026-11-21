@@ -73,6 +73,10 @@ class Player(pygame.sprite.Sprite):
         # Tracks whether the shooting animation has reached its final frame.
         self.shoot_finished = False
 
+        # for end game
+        self.can_trigger_extraction = False
+        self.bottle_in_game = False
+
     def get_animation(self):
         return self.animation
 
@@ -385,8 +389,9 @@ class Player(pygame.sprite.Sprite):
                 if self.rect.colliderect(boundary.rect):
                     return True
         
-        if alcohol != None:
+        if alcohol != None and self.bottle_in_game == True:
             if self.rect.colliderect(alcohol.rect):
+                self.can_trigger_extraction = True
                 print("Collision with Alcohol Bottle")
 
         return False

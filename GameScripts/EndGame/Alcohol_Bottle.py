@@ -10,6 +10,7 @@ class Alcohol(pygame.sprite.Sprite):
         self.image = load_sprite(image)
         self.image = pygame.transform.scale2x(self.image)
         self.image = pygame.transform.scale2x(self.image)
+        self.is_extracting = False
 
         # Give the sprite a rect (needed for positioning/drawing)
         self.rect = self.image.get_rect(topleft=(x, y))
@@ -19,3 +20,8 @@ class Alcohol(pygame.sprite.Sprite):
 
     def get_type(self):
         return self.type
+    
+    def trigger_extraction(self):
+        """ Method for triggering timer till the end of the game - SURVIVE"""
+
+        self.is_extracting = True

@@ -46,6 +46,16 @@ def draw_ui(screen, player):
 
     screen.blit(box_text, (60, 115))
 
+    if start_time is not None:
+
+        extraction_text = ui_font.render(
+            f"SURVIVE: {timer_display}",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(extraction_text, (20, 160))
+
 pygame.init()
 
 # Load background music
@@ -165,6 +175,9 @@ for row in current_map.grid:
             boxes.append(obj)
 
 print(len(boxes))
+
+start_time = None
+time_left = 180  # 3 minutes in seconds
 
 # -------------------------------------------------------------------------------------------
 # Main game engine loop
@@ -296,7 +309,41 @@ while running:
                 squash.play()
                 shooting.bullets.remove(bullet)
                 break  # one bullet kills one spider; stop checking this bullet
+    
+    # -----------------------------------------------------------------------
+    # Last Gameplay - Just to spawn the bottle
 
+    if has_bottle_spawned == False and times_boxes_opened >= 3:
+        player.bottle_in_game = True
+        camera_group.add(alcohol_bottle)
+        has_bottle_spawned = True
+
+
+    # Extraction timer
+    if player.can_trigger_extraction:
+
+        # Only set the start time once
+        if start_time is None:
+            start_time = pygame.time.get_ticks()
+
+        # Update timer EVERY frame
+        current_time = pygame.time.get_ticks()
+        elapsed_time = (current_time - start_time) // 1000
+
+        time_left = max(0, 180 - elapsed_time)
+
+        minutes = time_left // 60
+        seconds = time_left % 60
+
+        timer_display = f"{minutes}:{seconds:02d}"
+
+        if time_left == 0:
+            print("Extraction complete!")
+            player.can_trigger_extraction = False
+            # Put your extraction-complete logic here
+
+    # -----------------------------------------------------------------------
+    # UI elements
     # Red damage flash. Drawn before the popup and HUD so they stay readable.
     damage_flash.update(dt)
     damage_flash.draw(screen)
@@ -305,12 +352,9 @@ while running:
     reward_popup.update(dt)
     reward_popup.draw(screen)
 
-    # Icons/UI (User Interface)
+    # Icons/UI (User Interface) - REMEMBER THE FUNC CALLED BELOW IS AT TOP OF THIS FILE (main.py)
     draw_ui(screen, player)
-
-    # Last bit - Just to spawn the bottle
-    if has_bottle_spawned == False and times_boxes_opened >= 100:
-        camera_group.add(alcohol_bottle)
+    # ------------------------------------------------------------------------
     
     # flip() the display to put work on screen
     pygame.display.flip()
