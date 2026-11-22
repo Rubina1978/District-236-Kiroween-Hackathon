@@ -6,6 +6,12 @@ from GameScripts.Sprites.y_sort import YSortCameraGroup
 from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
 from GameScripts.UI.damage_flash import DamageFlash
+from GameScripts.game_state import GameState, GameStateManager
+from GameScripts.UI.main_menu import MainMenu
+from GameScripts.UI.screens import (
+    make_help_screen, make_credits_screen,
+    make_game_over_screen, make_victory_screen,
+)
 from GameScripts.score import Score
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 import random
@@ -237,6 +243,20 @@ async def main():
         screen.blit(score_text, (900, 680))
     
     # End of In Game UI -------------------------------------------------------------------------
+    # Which screen is showing. The game starts on the main menu.
+    state_manager = GameStateManager()
+    main_menu = MainMenu()
+    help_screen = make_help_screen()
+    credits_screen = make_credits_screen()
+    game_over_screen = make_game_over_screen()
+    victory_screen = make_victory_screen()
+    menu_screens = {
+        GameState.MAIN_MENU: main_menu,
+        GameState.HELP: help_screen,
+        GameState.CREDITS: credits_screen,
+        GameState.GAME_OVER: game_over_screen,
+        GameState.VICTORY: victory_screen,
+    }
 
     # -------------------------------------------------------------------------------------------
     # Main game engine loop
@@ -252,12 +272,49 @@ async def main():
             CurrentTrack = random.choice(MusicTracks)
             pygame.mixer.music.load(CurrentTrack)
             pygame.mixer.music.play()
+        
+        if state_manager.current != GameState.PLAYING:
+            action = None
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                else:
+                    action = menu_screens[state_manager.current].handle_event(event) or action
+
+            if action == "play":
+                # A new game each time: build it, then start.
+                draw_loading(screen)
+                (player, shooting, reward_popup, damage_flash,
+                camera_group, boundaries, boxes) = start_new_game()
+                clock.tick()  # ignore the time spent building, so the first dt is small
+                state_manager.change_to(GameState.PLAYING)
+                continue
+            elif action == "help":
+                state_manager.change_to(GameState.HELP)
+            elif action == "credits":
+                state_manager.change_to(GameState.CREDITS)
+            elif action == "menu":
+                # Coming back after a game: the ant and spider turn to each other again.
+                if state_manager.current in (GameState.GAME_OVER, GameState.VICTORY):
+                    main_menu.replay_characters()
+                state_manager.change_to(GameState.MAIN_MENU)
+            elif action == "quit":
+                running = False
+
+            menu_screens[state_manager.current].update(dt)
+            menu_screens[state_manager.current].draw(screen)
+            pygame.display.flip()
+            continue
 
         if player.lifeline.is_dead():
             print("You died... Game Over")
             running = False
         
         multiplier = player.multiplier
+
+        # Victory hook for later: when the ant reaches the JD bottle, do
+        #   victory_screen.set_backdrop(screen)
+        #   state_manager.change_to(GameState.VICTORY)
 
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
