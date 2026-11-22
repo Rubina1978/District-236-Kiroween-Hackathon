@@ -83,3 +83,15 @@
 - I tried this before and I couldn't get it to work
 - I tried to do it by monitoring if shooting sound effect was playing - to no avail though
 - AI helped in the end because I had two seperate things going on in the program loop and the player class. So AI wired both systems together to only shoot after sound effect is finished and after the last frame of the previous shooting animation.
+
+---
+
+### I have currently been working on:
+- General Game design - Spider spawning interval adjustments & spider speed adjustments
+- Score display and multipliers
+- updating rewards from boxes to give the multipliers
+- set up a perma multiplier for when you find the alcohol bottle
+
+- things have taken a turn since finding out about copyright issues so we use a Pennine logo as satire for amazon, and we are no longer refering to the alcohol bottle as a bottle of Jack Daniel's whiskey.
+
+- I have also been playing the game a lot because it is quite addictive in my opinion... probably not a good thing
