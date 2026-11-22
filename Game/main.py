@@ -1,4 +1,5 @@
 import pygame
+import os
 from GameScripts.world_builder import world_build
 from GameScripts.animator_controller import animator_interface
 from GameScripts.Player.player_obj import Player
@@ -33,9 +34,9 @@ async def main():
 
     # Load background music
     MusicTracks = [
-        "Assets/Audio/Background/RetroAntSoldiers.ogg",
+        "Assets/Audio/Background/Retro Ant Soldiers.ogg",
         "Assets/Audio/Background/Spiders.ogg",
-        "Assets/Audio/Background/StarGazer.ogg"
+        "Assets/Audio/Background/Star Gazer.ogg"
     ]
     CurrentTrack = random.choice(MusicTracks)
 
@@ -102,11 +103,15 @@ async def main():
     box_icon = pygame.image.load(
         "Assets/Artwork/Environment/Objects/Box/box_1.png"
     )
+    music_icon = pygame.image.load(
+        "Assets/Artwork/Menu/sprite_vinyl0.png"
+    )
 
     # Resize icons (optional)
     heart_icon = pygame.transform.scale(heart_icon, (32, 32))
     ammo_icon = pygame.transform.scale(ammo_icon, (32, 32))
     box_icon = pygame.transform.scale(box_icon, (32, 32))
+    music_icon = pygame.transform.scale(music_icon, (64, 64))
 
     # Font for UI counters
     ui_font = pygame.font.Font(None, 32)
@@ -238,6 +243,15 @@ async def main():
         )
 
         screen.blit(best_score_text, (950, 620))
+
+        screen.blit(music_icon, (20, 600))
+        music_text = ui_font.render(
+            f"{song}",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(music_text, (105, 625))
     
     def start_new_game():
         """Build a brand new game and return everything the loop needs.
@@ -516,6 +530,8 @@ async def main():
         reward_popup.update(dt)
         reward_popup.draw(screen)
 
+        # grab song name 
+        song = os.path.splitext(os.path.basename(CurrentTrack))[0]
         # Icons/UI (User Interface) - REMEMBER THE FUNC CALLED BELOW IS AT TOP OF THIS FILE (main.py)
         draw_ui(screen, player)
         # ------------------------------------------------------------------------
