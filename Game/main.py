@@ -33,8 +33,8 @@ async def main():
 
     # Load background music
     MusicTracks = [
-        "Assets/Audio/Background/Retro Ant Soldiers.ogg",
-        "Assets/Audio/Background/Star Gazer.ogg"
+        "Assets/Audio/Background/RetroAntSoldiers.ogg",
+        "Assets/Audio/Background/StarGazer.ogg"
     ]
     CurrentTrack = random.choice(MusicTracks)
 
