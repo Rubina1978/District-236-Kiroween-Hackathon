@@ -242,6 +242,64 @@ async def main():
 
         screen.blit(score_text, (900, 680))
     
+    def start_new_game():
+        """Build a brand new game and return everything the loop needs.
+
+        Called when Play (or Try Again) is chosen, so every run starts fresh:
+        full lives, full ammo, a new map and no spiders. The code inside is the
+        same set-up that used to run once at the top of this file.
+        """
+        # Load Player & set position.
+        # Player loads all of its animation frames once when it is created.
+        player = Player(animator=animator_interface(type="player"), pos=player_pos)
+
+        # Holds every bullet that is currently flying.
+        shooting = Shooting()
+
+        # Reward popup — shown in the top-right corner when the player loots a box.
+        reward_popup = RewardPopup()
+
+        # Red flash over the screen when the ant is bitten.
+        damage_flash = DamageFlash()
+
+        # Build the world (a grid of environment objects).
+        current_map = world_build(False)
+        tile_map = world_build(True)
+        boundaries = []
+        boxes = []
+
+        # Camera group with y-sorting: the player and the environment are drawn together
+        # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
+        camera_group = YSortCameraGroup(screen)
+        camera_group.add(player)
+
+        for sprite in current_map.get_sprites():
+            camera_group.add(sprite)
+
+        for sprite in tile_map.get_sprites():
+            camera_group.ground_sprites.add(sprite)
+
+        for row in tile_map.grid:
+            for obj in row:
+
+                if obj != 0 and obj.get_boundary():
+                    boundaries.append(obj)
+
+        for row in current_map.grid:
+            for obj in row:
+                if obj != 0 and obj.get_type() == "box":
+                    boxes.append(obj)
+
+        return player, shooting, reward_popup, damage_flash, camera_group, boundaries, boxes
+
+
+    def draw_loading(screen):
+        """Show a message while the world is built (it takes a moment)."""
+        screen.fill(BG_COLOR)
+        message = ui_font.render("Loading...", True, (255, 255, 255))
+        screen.blit(message, message.get_rect(center=screen.get_rect().center))
+        pygame.display.flip()
+    
     # End of In Game UI -------------------------------------------------------------------------
     # Which screen is showing. The game starts on the main menu.
     state_manager = GameStateManager()

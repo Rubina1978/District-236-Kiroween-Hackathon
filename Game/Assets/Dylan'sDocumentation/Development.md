@@ -96,7 +96,10 @@
 
 - I have also been playing the game a lot because it is quite addictive in my opinion... probably not a good thing
 
+---
+# IMPORTANT
 
+- Due to the need for getting the game playale in the web with pygodine, I have had to alter the file structure. All that is done is the game related files are in their own folder called 'Game' and the main.py is run through an async function called main. All of this was a requirement for making a build of the game for web browser.
 
 ---
 # IMPORTANT
@@ -107,10 +110,8 @@
 
 - I had to get help with pygame.mixer buffering and other specifications. I AM SO NEW TO PYGAME... and also I am a junior programmer and there is a lot I don't understand when it comes to what is happening on the hardware level. This is essential to know about for performance related things when building software. 
 
-- Please have pity on my AI usage, I couldn't get this on the web without external help since I did not have Kiro credits
-
 - HOWEVER - Hana has the kiro credits and kiro has done a lot for this game already. I have used the IDE, it is fine, I have had no problems it is the same as VS code on the surface and I have not had the time to explore various other features. Take pity on me
 
 - I believe kiro took my isometric tiles and duplicated them around the corners of the map boundary and I could not for life of me figure that out.
 
-- Lastly, I architectured quite a lot by systems design giving the AI a good foundation to work from. I did this intuitively and applying the knowledge I already have to scaffolding this project, the classes, how things fit together etc. AI just helped us with py game because we were completely new to it. I would love to rebuild this in unity.
+- Lastly, I architectured quite a lot by systems design and giving the AI a good foundation to work from. I did this intuitively and applying the knowledge I already have to scaffolding this project, the classes, how things fit together etc. AI just helped us with py game because we were completely new to it. I would love to rebuild this in unity.
