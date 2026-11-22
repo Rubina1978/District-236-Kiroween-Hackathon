@@ -100,9 +100,16 @@ pygame.init()
 
 score = Score()
 perma_multiplier = 0
+
 # Load background music
-pygame.mixer.music.load("Assets/Audio/Background/AntSoldierGameMastered.wav")
-pygame.mixer.music.play(-1)
+MusicTracks = [
+    "Assets/Audio/Background/AntSoldierGameMastered.wav",
+    "Assets/Audio/Background/AntSoldierGameTwoMastered.wav"
+]
+CurrentTrack = random.choice(MusicTracks)
+
+pygame.mixer.music.load(CurrentTrack)
+pygame.mixer.music.play()
 
 # Walk sound effects
 walk1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneL1.ogg")
@@ -228,6 +235,11 @@ while running:
     # dt is delta time in seconds. Movement uses this so speed does not depend
     # on the frame rate.
     dt = clock.tick(FPS) / 1000
+
+    if not pygame.mixer.music.get_busy():
+        CurrentTrack = random.choice(MusicTracks)
+        pygame.mixer.music.load(CurrentTrack)
+        pygame.mixer.music.play()
 
     if player.lifeline.is_dead():
         print("You died... Game Over")
