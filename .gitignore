@@ -5,5 +5,3 @@ __pycache__/
 .env
 build
 builds
-dist
-kota 236.spec
