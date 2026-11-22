@@ -3,3 +3,7 @@ __pycache__/
 *py[cod]
 .vscode/
 .env
+build
+builds
+dist
+kota 236.spec

@@ -4,7 +4,7 @@ import random
 
 class Items:
     def __init__(self):
-        self.random_choices = ["ammo", "x2", "life", "x4", "empty", "x1"] 
+        self.random_choices = ["ammo", "x2", "life", "x4", "ammo", "x1"] 
         self.reward = None
         
     
