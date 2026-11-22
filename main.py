@@ -6,6 +6,12 @@ from GameScripts.Sprites.y_sort import YSortCameraGroup
 from GameScripts.weapons.shooting import Shooting
 from GameScripts.UI.display_rewards import RewardPopup
 from GameScripts.UI.damage_flash import DamageFlash
+from GameScripts.game_state import GameState, GameStateManager
+from GameScripts.UI.main_menu import MainMenu
+from GameScripts.UI.screens import (
+    make_help_screen, make_credits_screen,
+    make_game_over_screen, make_victory_screen,
+)
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
 import random
 
@@ -80,11 +86,6 @@ pygame.display.set_caption("Point 236 (Kota 236)")
 # Start the player in the middle of the screen.
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())
 
-# Load Player & set position.
-# Player loads all of its animation frames once when it is created.
-player = Player(animator=animator_interface(type="player"), pos=player_pos)
-print("Starting ammo:", player.ammo)
-
 # Load UI icons
 heart_icon = pygame.image.load(
     "Assets/Artwork/Icons/Heart.png"
@@ -101,42 +102,79 @@ ammo_icon = pygame.transform.scale(ammo_icon, (32, 32))
 # Font for UI counters
 ui_font = pygame.font.Font(None, 32)
 
-# Holds every bullet that is currently flying.
-shooting = Shooting()
+def start_new_game():
+    """Build a brand new game and return everything the loop needs.
 
-# Reward popup — shown in the top-right corner when the player loots a box.
-reward_popup = RewardPopup()
+    Called when Play (or Try Again) is chosen, so every run starts fresh:
+    full lives, full ammo, a new map and no spiders. The code inside is the
+    same set-up that used to run once at the top of this file.
+    """
+    # Load Player & set position.
+    # Player loads all of its animation frames once when it is created.
+    player = Player(animator=animator_interface(type="player"), pos=player_pos)
 
-# Red flash over the screen when the ant is bitten.
-damage_flash = DamageFlash()
+    # Holds every bullet that is currently flying.
+    shooting = Shooting()
 
-# Build the world (a grid of environment objects).
-current_map = world_build(False)
-tile_map = world_build(True)
-boundaries = []
-boxes = []
+    # Reward popup — shown in the top-right corner when the player loots a box.
+    reward_popup = RewardPopup()
 
-# Camera group with y-sorting: the player and the environment are drawn together
-# in one pass, sorted by Y position so lower sprites appear in front of higher ones.
-camera_group = YSortCameraGroup(screen)
-camera_group.add(player)
+    # Red flash over the screen when the ant is bitten.
+    damage_flash = DamageFlash()
 
-for sprite in current_map.get_sprites():
-    camera_group.add(sprite)
+    # Build the world (a grid of environment objects).
+    current_map = world_build(False)
+    tile_map = world_build(True)
+    boundaries = []
+    boxes = []
 
-for sprite in tile_map.get_sprites():
-    camera_group.ground_sprites.add(sprite)
+    # Camera group with y-sorting: the player and the environment are drawn together
+    # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
+    camera_group = YSortCameraGroup(screen)
+    camera_group.add(player)
 
-for row in tile_map.grid:
-    for obj in row:
+    for sprite in current_map.get_sprites():
+        camera_group.add(sprite)
 
-        if obj != 0 and obj.get_boundary():
-            boundaries.append(obj)
+    for sprite in tile_map.get_sprites():
+        camera_group.ground_sprites.add(sprite)
 
-for row in current_map.grid:
-    for obj in row:
-        if obj != 0 and obj.get_type() == "box":
-            boxes.append(obj)
+    for row in tile_map.grid:
+        for obj in row:
+
+            if obj != 0 and obj.get_boundary():
+                boundaries.append(obj)
+
+    for row in current_map.grid:
+        for obj in row:
+            if obj != 0 and obj.get_type() == "box":
+                boxes.append(obj)
+
+    return player, shooting, reward_popup, damage_flash, camera_group, boundaries, boxes
+
+
+def draw_loading(screen):
+    """Show a message while the world is built (it takes a moment)."""
+    screen.fill(BG_COLOR)
+    message = ui_font.render("Loading...", True, (255, 255, 255))
+    screen.blit(message, message.get_rect(center=screen.get_rect().center))
+    pygame.display.flip()
+
+
+# Which screen is showing. The game starts on the main menu.
+state_manager = GameStateManager()
+main_menu = MainMenu()
+help_screen = make_help_screen()
+credits_screen = make_credits_screen()
+game_over_screen = make_game_over_screen()
+victory_screen = make_victory_screen()
+menu_screens = {
+    GameState.MAIN_MENU: main_menu,
+    GameState.HELP: help_screen,
+    GameState.CREDITS: credits_screen,
+    GameState.GAME_OVER: game_over_screen,
+    GameState.VICTORY: victory_screen,
+}
 
 
 # -------------------------------------------------------------------------------------------
@@ -147,9 +185,52 @@ while running:
     # on the frame rate.
     dt = clock.tick(FPS) / 1000
 
+    # --- Menu screens (every state except PLAYING) ---------------------------
+    # While a menu screen is showing, only that screen runs. "continue" jumps
+    # back to the top of the loop, so the gameplay code below is skipped.
+    if state_manager.current != GameState.PLAYING:
+        action = None
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            else:
+                action = menu_screens[state_manager.current].handle_event(event) or action
+
+        if action == "play":
+            # A new game each time: build it, then start.
+            draw_loading(screen)
+            (player, shooting, reward_popup, damage_flash,
+             camera_group, boundaries, boxes) = start_new_game()
+            clock.tick()  # ignore the time spent building, so the first dt is small
+            state_manager.change_to(GameState.PLAYING)
+            continue
+        elif action == "help":
+            state_manager.change_to(GameState.HELP)
+        elif action == "credits":
+            state_manager.change_to(GameState.CREDITS)
+        elif action == "menu":
+            # Coming back after a game: the ant and spider turn to each other again.
+            if state_manager.current in (GameState.GAME_OVER, GameState.VICTORY):
+                main_menu.replay_characters()
+            state_manager.change_to(GameState.MAIN_MENU)
+        elif action == "quit":
+            running = False
+
+        menu_screens[state_manager.current].update(dt)
+        menu_screens[state_manager.current].draw(screen)
+        pygame.display.flip()
+        continue
+
+    # --- Gameplay -------------------------------------------------------------
     if player.lifeline.is_dead():
-        print("You died... Game Over")
-        running = False
+        walk_channel.stop()
+        game_over_screen.set_backdrop(screen)   # last frame, darkened
+        state_manager.change_to(GameState.GAME_OVER)
+        continue
+
+    # Victory hook for later: when the ant reaches the JD bottle, do
+    #   victory_screen.set_backdrop(screen)
+    #   state_manager.change_to(GameState.VICTORY)
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window

@@ -49,3 +49,30 @@ KNOCKBACK_DISTANCE = 40
 KNOCKBACK_SECONDS = 0.15
 # Seconds the red flash takes to fade out after the ant is bitten.
 DAMAGE_FLASH_SECONDS = 0.25
+
+# --- Menu (menu artwork and text only; none of this touches gameplay) ---
+# Placeholder title and story. Change the text here whenever you rename the game.
+GAME_TITLE = "POINT 236 (KOTA 236)"
+MENU_STORY = (
+    "The world has fallen into decay. Giant spiders roam the wasteland while "
+    "the ant colonies struggle to survive. Legend speaks of a sacred bottle of "
+    "JD hidden beyond the ruins. Many ants have searched. None have returned."
+)
+
+# Menu artwork files. Replace these two PNGs to change the pictures; no code
+# changes needed. If a file is missing, a scaled-up copy of a gameplay sprite
+# is shown instead (the gameplay sprite itself is never changed).
+MENU_ANT_IMAGE = "Assets/Artwork/Menu/menu_ant.png"
+MENU_SPIDER_IMAGE = "Assets/Artwork/Menu/menu_spider.png"
+
+# The empty space (width, height in pixels) each picture is fitted into, on the
+# left and right of the buttons. Any image size works: it is shrunk or grown to
+# fit this space first, keeping its proportions.
+MENU_ART_BOX = (360, 300)
+
+# How big each picture is inside that space. 1.0 fills the space, 0.5 is half
+# size, 1.2 is a little larger. These only affect the menu pictures.
+MENU_ANT_SCALE = 1.0
+MENU_SPIDER_SCALE = 1.0
+# How fast the main-menu story types itself out (characters per second).
+MENU_TYPEWRITER_CPS = 45
