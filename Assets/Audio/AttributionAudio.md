@@ -34,7 +34,9 @@ License: Creative Commons 0
 Edits: Dylan made no edits
 ---
 Dylan Austin
-AntSoldierGameMastered.wav
+
+1. AntSoldierGameMastered.wav
+2. AntSoldierGameTwoMastered.wav
 
 Licence: Rights reserved for the time being (bloody good tune)
 Edits: Produced with bandlab, and mastered with bandlab online mastering
