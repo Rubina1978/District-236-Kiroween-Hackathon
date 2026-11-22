@@ -149,10 +149,7 @@ async def main():
     start_time = None
     time_left = 180  # 3 minutes in seconds
 
-    print("KOTA 236: MAIN.PY STARTED")
-    print("KOTA 236: ENTERING GAME LOOP")
-
-    # UI
+    # In Game UI ------------------------------------------------------
     def draw_ui(screen, player):
 
         # Health icon
@@ -238,6 +235,8 @@ async def main():
         )
 
         screen.blit(score_text, (900, 680))
+    
+    # End of In Game UI -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------------
     # Main game engine loop
