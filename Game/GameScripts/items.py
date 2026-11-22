@@ -4,7 +4,7 @@ import random
 
 class Items:
     def __init__(self):
-        self.random_choices = ["ammo", "x2", "life", "x4", "ammo", "x1"] 
+        self.random_choices = ["ammo", "x2", "life", "x4", "ammo", "x1", "x8"] 
         self.reward = None
         
     
@@ -17,6 +17,8 @@ class Items:
             player.multiplier = 2
         elif reward == "x4":
             player.multiplier = 4
+        elif reward == "x8":
+            player.multiplier = 8
         elif reward == "x1":
             player.multiplier = 1
 

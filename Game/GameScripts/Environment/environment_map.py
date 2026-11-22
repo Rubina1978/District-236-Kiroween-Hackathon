@@ -20,13 +20,13 @@ def build_environment(rows=18 *4, cols=31 * 4):
     
 
     # for generating the alcohol bottle with co-ordinates
-    r = 15 * 4
-    c = 28 * 4
+    r = random.randint(16, 28)
+    random.randrange(4, 14)
 
     x = (c - r) * (120 / 2)
     y = (c + r) * (60 / 2)
 
-    environment_map[r][c] = generate_alcohol(x, y)
+    environment_map[r][c] = generate_chest(x, y)
 
     return environment_map
 
@@ -48,6 +48,11 @@ def generate_envrionment_obj(x, y):
     else:
         return EnvrionmentObject(type=random_type, artwork=random_type, x=x, y=y, animator=None)
 
-def generate_alcohol(x, y):
-    image = "Assets/Artwork/Environment/Objects/JDBottle/JackDaniels.png"
-    return Alcohol(image=image, x=x, y=y)
+def generate_chest(x, y):
+    return EnvrionmentObject(
+        type="box", 
+        artwork="Assets/Artwork/Environment/Objects/Chest/treasure_chest_open_1x.png", 
+        x=x, 
+        y=y, 
+        animator=None
+    )

@@ -26,6 +26,8 @@ async def main():
     )
     pygame.init()
 
+    whiskey_found = False
+    best_score = 0
     score = Score()
     perma_multiplier = 0
 
@@ -122,7 +124,6 @@ async def main():
     tile_map = world_build(True)
     boundaries = []
     boxes = []
-    times_boxes_opened = 0
 
     # Camera group with y-sorting: the player and the environment are drawn together
     # in one pass, sorted by Y position so lower sprites appear in front of higher ones.
@@ -149,8 +150,6 @@ async def main():
         for obj in row:
             if obj != 0 and obj.get_type() == "box":
                 boxes.append(obj)
-
-    print(len(boxes))
 
     start_time = None
     time_left = 180  # 3 minutes in seconds
@@ -182,17 +181,6 @@ async def main():
 
         screen.blit(ammo_text, (60, 69))
 
-        # For boxes opened
-        screen.blit(box_icon, (20, 115))
-
-        box_text = ui_font.render(
-            f"{times_boxes_opened}/100",
-            True,
-            (255, 255, 255)
-        )
-
-        screen.blit(box_text, (60, 115))
-
         if start_time is not None:
 
             extraction_text = ui_font.render(
@@ -203,14 +191,7 @@ async def main():
 
             screen.blit(extraction_text, (20, 160))
         
-        if perma_multiplier != 0:
-            multiplier_text = ui_font.render(
-                f"x{perma_multiplier}",
-                True,
-                (255, 215, 0)
-            )
-            screen.blit(multiplier_text, (750, 680))
-        elif player.multiplier == 1:
+        if player.multiplier == 1:
             multiplier_text = ui_font.render(
                 f"",
                 True,
@@ -231,6 +212,13 @@ async def main():
                 (60, 170, 215)
             )
             screen.blit(multiplier_text, (750, 680))
+        elif player.multiplier == 8:
+            multiplier_text = ui_font.render(
+                f"x{player.multiplier}",
+                True,
+                (255, 215, 0)
+            )
+            screen.blit(multiplier_text, (750, 680))
             
         
         # For displaying the player score for the session
@@ -240,7 +228,15 @@ async def main():
             (255, 255, 255)
         )
 
-        screen.blit(score_text, (900, 680))
+        screen.blit(score_text, (950, 680))
+
+        best_score_text = ui_font.render(
+            f"Best: {best_score}",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(best_score_text, (950, 620))
     
     def start_new_game():
         """Build a brand new game and return everything the loop needs.
@@ -249,6 +245,8 @@ async def main():
         full lives, full ammo, a new map and no spiders. The code inside is the
         same set-up that used to run once at the top of this file.
         """
+
+        whiskey_found = False
         # Load Player & set position.
         # Player loads all of its animation frames once when it is created.
         player = Player(animator=animator_interface(type="player"), pos=player_pos)
@@ -289,8 +287,10 @@ async def main():
             for obj in row:
                 if obj != 0 and obj.get_type() == "box":
                     boxes.append(obj)
+        
+        player.score = 0
 
-        return player, shooting, reward_popup, damage_flash, camera_group, boundaries, boxes
+        return player, shooting, reward_popup, damage_flash, camera_group, boundaries, boxes, whiskey_found
 
 
     def draw_loading(screen):
@@ -315,7 +315,6 @@ async def main():
         GameState.GAME_OVER: game_over_screen,
         GameState.VICTORY: victory_screen,
     }
-
     # -------------------------------------------------------------------------------------------
     # Main game engine loop
     # -------------------------------------------------------------------------------------------
@@ -343,7 +342,7 @@ async def main():
                 # A new game each time: build it, then start.
                 draw_loading(screen)
                 (player, shooting, reward_popup, damage_flash,
-                camera_group, boundaries, boxes) = start_new_game()
+                camera_group, boundaries, boxes, whiskey_found) = start_new_game()
                 clock.tick()  # ignore the time spent building, so the first dt is small
                 state_manager.change_to(GameState.PLAYING)
                 continue
@@ -364,15 +363,20 @@ async def main():
             pygame.display.flip()
             continue
 
+        if whiskey_found == True:
+            victory_screen.set_backdrop(screen)
+            state_manager.change_to(GameState.VICTORY)
+            if score.return_points() > best_score:
+                best_score = score.return_points()
+                score.reset_points()
+
         if player.lifeline.is_dead():
+            score.reset_points()
+            game_over_screen.set_backdrop(screen)
+            state_manager.change_to(GameState.GAME_OVER)
             print("You died... Game Over")
-            running = False
         
         multiplier = player.multiplier
-
-        # Victory hook for later: when the ant reaches the JD bottle, do
-        #   victory_screen.set_backdrop(screen)
-        #   state_manager.change_to(GameState.VICTORY)
 
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
@@ -435,15 +439,19 @@ async def main():
         
         player.move(dt, keys, boundaries, boxes, alcohol_bottle)
 
+        reward = player.last_reward
         # check_collision returns the reward string when a fresh box is opened.
         # Pass it to the popup so the icon appears in the corner.
-        reward = player.last_reward
-        if reward:
-            cardboard_box.play()
-            reward_popup.show(reward)
-            player.last_reward = None
-            times_boxes_opened += 1
+        if reward == "whiskey":
+            whiskey_found = True
         
+        elif reward:
+                cardboard_box.play()
+                reward_popup.show(reward)
+                player.last_reward = None
+        # Clear the reward after processing it
+        if reward:
+            player.last_reward = None
 
         # fill the screen with a colour to wipe away anything from last frame
         screen.fill(BG_COLOR)
@@ -496,39 +504,6 @@ async def main():
                         score.give_points(2, perma_multiplier)
                     shooting.bullets.remove(bullet)
                     break  # one bullet kills one spider; stop checking this bullet
-        
-        # -----------------------------------------------------------------------
-        # Last Gameplay - Just to spawn the bottle
-
-        if has_bottle_spawned == False and times_boxes_opened >= 3:
-            player.bottle_in_game = True
-            camera_group.add(alcohol_bottle)
-            has_bottle_spawned = True
-
-
-        # Extraction timer
-        if player.can_trigger_extraction:
-
-            # Only set the start time once
-            if start_time is None:
-                start_time = pygame.time.get_ticks()
-                perma_multiplier = 8
-
-            # Update timer EVERY frame
-            current_time = pygame.time.get_ticks()
-            elapsed_time = (current_time - start_time) // 1000
-
-            time_left = max(0, 180 - elapsed_time)
-
-            minutes = time_left // 60
-            seconds = time_left % 60
-
-            timer_display = f"{minutes}:{seconds:02d}"
-
-            if time_left == 0:
-                print("Extraction complete!")
-                player.can_trigger_extraction = False
-                # Put your extraction-complete logic here
 
         # -----------------------------------------------------------------------
         # UI elements

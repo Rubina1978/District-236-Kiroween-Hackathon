@@ -115,3 +115,7 @@
 - I believe kiro took my isometric tiles and duplicated them around the corners of the map boundary and I could not for life of me figure that out.
 
 - Lastly, I architectured quite a lot by systems design and giving the AI a good foundation to work from. I did this intuitively and applying the knowledge I already have to scaffolding this project, the classes, how things fit together etc. AI just helped us with py game because we were completely new to it. I would love to rebuild this in unity.
+
+---
+### Contemplations of fallen allies
+![alt text](image-7.png)

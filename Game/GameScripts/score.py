@@ -7,3 +7,6 @@ class Score:
     
     def return_points(self):
         return self.points
+    
+    def reset_points(self):
+        self.points = 0
