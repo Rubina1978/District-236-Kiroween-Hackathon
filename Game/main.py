@@ -15,7 +15,7 @@ from GameScripts.UI.screens import (
     make_game_over_screen, make_victory_screen,
 )
 from GameScripts.score import Score
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR, GAME_TITLE
 import random
 import asyncio
 
@@ -83,7 +83,7 @@ async def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     running = True
-    pygame.display.set_caption("Point 236 (Kota 236)")
+    pygame.display.set_caption(GAME_TITLE)
 
     # Start the player in the middle of the screen.
     player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height())

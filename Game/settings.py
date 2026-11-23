@@ -52,7 +52,7 @@ DAMAGE_FLASH_SECONDS = 0.25
 
 # --- Menu (menu artwork and text only; none of this touches gameplay) ---
 # Placeholder title and story. Change the text here whenever you rename the game.
-GAME_TITLE = "POINT 236 (KOTA 236)"
+GAME_TITLE = "DISTRICT 236"
 # What the bottle is called in the game text. Change it here and the menu,
 # help and victory screens all update.
 BOTTLE_NAME = "Ant Whiskey"
