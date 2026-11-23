@@ -27,6 +27,7 @@ async def main():
     )
     pygame.init()
 
+    music_muted = False
     whiskey_found = False
     best_score = 0
     score = Score()
@@ -330,6 +331,8 @@ async def main():
         GameState.GAME_OVER: game_over_screen,
         GameState.VICTORY: victory_screen,
     }
+
+    music_rect = music_icon.get_rect(topleft=(20, 600))
     # -------------------------------------------------------------------------------------------
     # Main game engine loop
     # -------------------------------------------------------------------------------------------
@@ -340,7 +343,7 @@ async def main():
 
         await asyncio.sleep(1 / (FPS * 2))
 
-        if not pygame.mixer.music.get_busy():
+        if not music_muted and not pygame.mixer.music.get_busy():
             CurrentTrack = random.choice(MusicTracks)
             pygame.mixer.music.load(CurrentTrack)
             pygame.mixer.music.play()
@@ -400,33 +403,49 @@ async def main():
                 running = False
             # MOUSEBUTTONDOWN fires once per click. button 1 is the left button.
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if not shoot_channel.get_busy():
-                    if player.ammo > 0:
-                        if not shoot_channel.get_busy():
-                            shot = random.choice(shoot_sounds)
-                            shoot_channel.play(shot)
-                        # where the cursor is on the screen
-                        mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
+                # Check if the music icon was clicked
+                if music_rect.collidepoint(event.pos):
+                    music_muted = not music_muted
 
-                        # Screen to world: Add how far the camera has scrolled
-                        mouse_world = mouse_screen + camera_group.get_camera().offset
-                        
-                        # Direction from the ant to the cursor
-                        direction = mouse_world - player.pos
+                    if music_muted:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
+                else:
+                    if not shoot_channel.get_busy():
+                        if player.ammo > 0:
+                            if not shoot_channel.get_busy():
+                                shot = random.choice(shoot_sounds)
+                                shoot_channel.play(shot)
+                            # where the cursor is on the screen
+                            mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
+                            if music_rect.collidepoint(mouse_screen):
+                                music_muted = not music_muted
 
-                        # normalise() fails on a zero-length vector (a click exactly on the ant),\
-                        # so only continue when the vector has some length. 
-                        if direction.length_squared() > 0:
-                            direction = direction.normalize()
-                            # Commented out print(direction) and print(ammo)because the terminal builds garbage 
-                            # memory/stack overflow or something like that
-                            # I'm not pro, don't quote me on terminology!! lululul
-                            # print(direction)
-                            player.face_towards(direction)
-                            player.start_shooting()
-                            shooting.fire(player.pos, direction)
-                            player.ammo -= 1
-                            # print(player.ammo)
+                                if music_muted:
+                                    pygame.mixer.music.pause()
+                                else:
+                                    pygame.mixer.music.unpause()
+
+                            # Screen to world: Add how far the camera has scrolled
+                            mouse_world = mouse_screen + camera_group.get_camera().offset
+                            
+                            # Direction from the ant to the cursor
+                            direction = mouse_world - player.pos
+
+                            # normalise() fails on a zero-length vector (a click exactly on the ant),\
+                            # so only continue when the vector has some length. 
+                            if direction.length_squared() > 0:
+                                direction = direction.normalize()
+                                # Commented out print(direction) and print(ammo)because the terminal builds garbage 
+                                # memory/stack overflow or something like that
+                                # I'm not pro, don't quote me on terminology!! lululul
+                                # print(direction)
+                                player.face_towards(direction)
+                                player.start_shooting()
+                                shooting.fire(player.pos, direction)
+                                player.ammo -= 1
+                                # print(player.ammo)
 
         # Read the keyboard state every frame and pass it to the player. Holding a
         # key moves continuously; the player switches to run while held and idle on

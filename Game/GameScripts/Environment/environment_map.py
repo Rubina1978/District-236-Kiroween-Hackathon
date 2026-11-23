@@ -51,7 +51,7 @@ def generate_envrionment_obj(x, y):
 def generate_chest(x, y):
     return EnvrionmentObject(
         type="box", 
-        artwork="Assets/Artwork/Environment/Objects/Chest/treasure_chest_open_1x.png", 
+        artwork="Assets/Artwork/Environment/Objects/Chest/sprite_chest1.png", 
         x=x, 
         y=y, 
         animator=None

@@ -38,7 +38,7 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         # Load the PNG ONCE when the object is created, not every frame.
         # convert_alpha() keeps the transparent edges and makes blitting fast.
         if self.type == "box" and self.artwork != self.type:
-            path = f"Assets/Artwork/Environment/Objects/Chest/treasure_chest_open_1x.png"
+            path = f"Assets/Artwork/Environment/Objects/Chest/sprite_chest1.png"
         elif self.type == "box":
             path = f"Assets/Artwork/Environment/Objects/Box/{self.type}_1.png"
         elif self.type == "grass1":
@@ -102,6 +102,8 @@ class EnvrionmentObject(pygame.sprite.Sprite):
 
         elif self.type == "box" and self.artwork != self.type:
             self.opened = True
+            self.artwork = "Assets/Artwork/Environment/Objects/Chest/sprite_chest0.png"
+            self.get_current_frame()
             return "whiskey"
 
         return None
