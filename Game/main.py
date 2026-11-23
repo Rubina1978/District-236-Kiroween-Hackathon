@@ -251,13 +251,10 @@ async def main():
             True,
             (255, 255, 255)
         )
-        mute_text = ui_font.render(
-            f"Mute = {str(music_muted)}",
-            True,
-            (255, 255, 255)
-        )
-
-        screen.blit(mute_text, (20, 540))
+        # Only show a message while muted. Nothing is shown when sound is on.
+        if music_muted:
+            mute_text = ui_font.render("Muted", True, (255, 255, 255))
+            screen.blit(mute_text, (20, 540))
         screen.blit(music_text, (105, 625))
     
     def start_new_game():
@@ -415,6 +412,7 @@ async def main():
 
                     if music_muted:
                         pygame.mixer.music.pause()
+                        pygame.mixer.stop()  # also cut sound effects that are playing
                     else:
                         pygame.mixer.music.unpause()
                 else:
@@ -422,7 +420,8 @@ async def main():
                         if player.ammo > 0:
                             if not shoot_channel.get_busy():
                                 shot = random.choice(shoot_sounds)
-                                shoot_channel.play(shot)
+                                if not music_muted:
+                                    shoot_channel.play(shot)
                             # where the cursor is on the screen
                             mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
                             if music_rect.collidepoint(mouse_screen):
@@ -468,7 +467,8 @@ async def main():
         if moving:
             if not walk_channel.get_busy():
                 walk_sound = random.choice(walking_sounds)
-                walk_channel.play(walk_sound)
+                if not music_muted:
+                    walk_channel.play(walk_sound)
         else:
             walk_channel.stop()
 
@@ -486,7 +486,8 @@ async def main():
             whiskey_found = True
         
         elif reward:
-                cardboard_box.play()
+                if not music_muted:
+                    cardboard_box.play()
                 reward_popup.show(reward)
                 player.last_reward = None
         # Clear the reward after processing it
@@ -514,7 +515,8 @@ async def main():
 
         # A spider bit the ant this frame: start the red flash, then clear the flag.
         if player.just_hit:
-            ouch.play()
+            if not music_muted:
+                ouch.play()
             damage_flash.trigger()
             player.just_hit = False
 
@@ -537,7 +539,8 @@ async def main():
             for spider in camera_group.enemy_pool.get_activated_enemies():
                 if not spider.dying and bullet.hits(spider):
                     spider.kill_spider()
-                    squash.play()
+                    if not music_muted:
+                        squash.play()
                     if perma_multiplier == 0:
                         score.give_points(2, multiplier)
                     else:

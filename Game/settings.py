@@ -44,9 +44,9 @@ INVULNERABLE_MS = 2000
 # Milliseconds between each blink (show / hide) while the ant is protected.
 BLINK_MS = 100
 # How far (pixels) a bite pushes the ant away from the spider.
-KNOCKBACK_DISTANCE = 40
+KNOCKBACK_DISTANCE = 100
 # How long (seconds) the push takes. A short time feels like a shove.
-KNOCKBACK_SECONDS = 0.15
+KNOCKBACK_SECONDS = 0.2
 # Seconds the red flash takes to fade out after the ant is bitten.
 DAMAGE_FLASH_SECONDS = 0.25
 
@@ -76,3 +76,13 @@ MENU_ANT_SCALE = 1.0
 MENU_SPIDER_SCALE = 1.0
 # How fast the main-menu story types itself out (characters per second).
 MENU_TYPEWRITER_CPS = 45
+
+# Spiders keep at least this far (pixels) from the ant while it is protected
+# after a bite, so they do not pile onto it. Larger = more breathing room.
+SPIDER_PERSONAL_SPACE = 100
+
+# How fast spiders walk, in pixels per second. Each spider gets a random speed
+# between these two numbers when it is created. The ant walks at PLAYER_SPEED
+# (240), so spiders below that can be outrun; spiders above it cannot.
+SPIDER_SPEED_MIN = 150
+SPIDER_SPEED_MAX = 235

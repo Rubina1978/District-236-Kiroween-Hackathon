@@ -461,6 +461,6 @@ class Player(pygame.sprite.Sprite):
         if self.check_collision(boundaries=boundaries, boxes=None, alcohol=None):
             self.pos.y = old_y
             self.rect.centery = round(self.pos.y)
-        print(f"Lost a life! You have {self.lifeline.lives} lives remaining!")
+
     def kill_player(self):
         is_dead = True

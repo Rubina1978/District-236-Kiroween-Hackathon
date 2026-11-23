@@ -1,4 +1,5 @@
 import pygame
+from settings import SPIDER_PERSONAL_SPACE, SPIDER_SPEED_MIN, SPIDER_SPEED_MAX
 from GameScripts.sprite_cache import load as load_sprite
 import random
 import math
@@ -21,7 +22,7 @@ class Spider(pygame.sprite.Sprite):
         self.death_timer = 0        # ms timestamp set when dying starts
         self.animator = animator
 
-        self.speed = random.randint(245, 290)
+        self.speed = random.randint(SPIDER_SPEED_MIN, SPIDER_SPEED_MAX)
         # Animation
         self.facing = "camera_facing"
         self.moving = False
@@ -102,7 +103,26 @@ class Spider(pygame.sprite.Sprite):
         # Stop when sufficiently close
         stopping_distance = 10
 
-        if distance > stopping_distance:
+        # After a bite the ant is protected for a while. During that time the
+        # spiders keep their distance instead of piling onto the ant.
+        protected = player.is_invulnerable()
+
+        if protected and distance < SPIDER_PERSONAL_SPACE:
+            # Too close to a protected ant: back away (still facing the ant).
+            # A zero-length direction (exactly on the ant) cannot be
+            # normalized, so use any direction in that case.
+            away = -direction.normalize() if distance > 0 else pygame.Vector2(1, 0)
+            self.pos += away * self.speed * dt
+            self.rect.center = (
+                round(self.pos.x),
+                round(self.pos.y)
+            )
+            new_moving = True
+        elif protected and distance < SPIDER_PERSONAL_SPACE + 20:
+            # Far enough: wait here until the protection ends. The extra 20 px
+            # stops the spider from jittering back and forth on the edge.
+            new_moving = False
+        elif distance > stopping_distance:
 
             direction = direction.normalize()
 
