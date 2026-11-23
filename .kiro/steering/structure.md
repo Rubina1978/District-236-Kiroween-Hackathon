@@ -1,4 +1,4 @@
-# Kota236: Project Structure
+# District 236: Project Structure
 
 ## Current state
 Only `main.py` exists: a window, a 60 FPS clock, a quit event and a green background. Everything below is a **plan**. Create files only when a feature needs them, not in advance.

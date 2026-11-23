@@ -1,4 +1,4 @@
-# Kota236: Technical Guidelines
+# District 236: Technical Guidelines
 
 ## Stack
 - Python 3 with **Pygame 2.6.1** (pinned in `requirements.txt`).
