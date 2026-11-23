@@ -251,7 +251,13 @@ async def main():
             True,
             (255, 255, 255)
         )
+        mute_text = ui_font.render(
+            f"Mute = {str(music_muted)}",
+            True,
+            (255, 255, 255)
+        )
 
+        screen.blit(mute_text, (20, 540))
         screen.blit(music_text, (105, 625))
     
     def start_new_game():
