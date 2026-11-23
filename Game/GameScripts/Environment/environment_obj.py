@@ -103,7 +103,8 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         elif self.type == "box" and self.artwork != self.type:
             self.opened = True
             self.artwork = "Assets/Artwork/Environment/Objects/Chest/sprite_chest0.png"
-            self.get_current_frame()
+            # Show the open chest (same 2x enlargement as the closed one).
+            self.image = pygame.transform.scale2x(load_sprite(self.artwork))
             return "whiskey"
 
         return None

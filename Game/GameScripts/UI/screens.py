@@ -1,5 +1,5 @@
 import pygame
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, INVULNERABLE_MS
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, INVULNERABLE_MS, BOTTLE_NAME, BOTTLE_IMAGE
 from .menu_style import (
     TEXT_COLOR, HEADING_COLOR,
     make_background, make_panel, render_text, Button, ButtonGroup,
@@ -22,7 +22,7 @@ class InfoScreen:
     A line ending with ":" is drawn as a heading. An empty line is a gap.
     """
 
-    def __init__(self, title, title_color, lines, buttons, align="left"):
+    def __init__(self, title, title_color, lines, buttons, align="left", picture=None):
         self.background = make_background()
         # The last gameplay frame (darkened), shown behind Game Over / Victory.
         self.backdrop = None
@@ -49,13 +49,19 @@ class InfoScreen:
             is_heading = line.endswith(":")
             font = heading_font if is_heading else text_font
             colour = HEADING_COLOR if is_heading else TEXT_COLOR
-            picture = render_text(font, line, colour)
+            text_picture = render_text(font, line, colour)
             y = self.panel_rect.top + 20 + index * LINE_HEIGHT
             if align == "center":
-                rect = picture.get_rect(midtop=(self.panel_rect.centerx, y))
+                rect = text_picture.get_rect(midtop=(self.panel_rect.centerx, y))
             else:
-                rect = picture.get_rect(topleft=(self.panel_rect.left + 40, y))
-            self.line_items.append((picture, rect))
+                rect = text_picture.get_rect(topleft=(self.panel_rect.left + 40, y))
+            self.line_items.append((text_picture, rect))
+
+        # An optional picture, centred in the space between the panel and the buttons.
+        self.picture = picture
+        if picture is not None:
+            middle_y = (self.panel_rect.bottom + BUTTON_Y) // 2
+            self.picture_rect = picture.get_rect(center=(SCREEN_WIDTH // 2, middle_y))
 
         # Buttons in a row, centred on the screen.
         button_width, button_height = BUTTON_SIZE
@@ -87,8 +93,10 @@ class InfoScreen:
         screen.blit(self.backdrop if self.backdrop else self.background, (0, 0))
         screen.blit(self.title, self.title_rect)
         screen.blit(self.panel, self.panel_rect)
-        for picture, rect in self.line_items:
-            screen.blit(picture, rect)
+        for text_picture, rect in self.line_items:
+            screen.blit(text_picture, rect)
+        if self.picture is not None:
+            screen.blit(self.picture, self.picture_rect)
         self.buttons.draw(screen)
 
 
@@ -104,7 +112,7 @@ def make_help_screen():
         f"After a spider bites you, you are protected for {INVULNERABLE_MS / 1000:g} seconds.",
         "",
         "Objective:",
-        "Avoid spiders, collect loot, and find the legendary JD bottle.",
+        f"Avoid spiders, collect loot, and find the legendary {BOTTLE_NAME}.",
     ]
     return InfoScreen("HELP", HEADING_COLOR, lines, [("Back", "menu")])
 
@@ -137,10 +145,14 @@ def make_game_over_screen():
 
 def make_victory_screen():
     lines = [
-        "You found the legendary JD bottle!",
+        f"You found the legendary {BOTTLE_NAME}!",
         "The colony is saved.",
     ]
+    # The bottle, enlarged for this screen only (a new copy; the file is not changed).
+    bottle = pygame.image.load(BOTTLE_IMAGE).convert_alpha()
+    bottle = pygame.transform.scale(bottle, (192, 192))
     return InfoScreen(
         "VICTORY", (240, 190, 60), lines,
         [("Play Again", "play"), ("Main Menu", "menu")], align="center",
+        picture=bottle,
     )

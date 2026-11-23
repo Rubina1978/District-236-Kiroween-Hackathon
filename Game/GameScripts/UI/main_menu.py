@@ -1,6 +1,6 @@
 import pygame
 from settings import (
-    SCREEN_WIDTH, GAME_TITLE, MENU_STORY, MENU_TYPEWRITER_CPS,
+    SCREEN_WIDTH, GAME_TITLE, MENU_STORY, MENU_TYPEWRITER_CPS, BOTTLE_NAME,
     MENU_ANT_IMAGE, MENU_SPIDER_IMAGE, MENU_ANT_SCALE, MENU_SPIDER_SCALE,
 )
 from GameScripts.animator_controller import animator_interface
@@ -101,7 +101,7 @@ class MainMenu:
         for index, line in enumerate(controls):
             self._add_text(text_font, line, TEXT_COLOR, left_x, PANEL_RECT.top + 46 + index * 28)
         self._add_text(heading_font, "Objective:", HEADING_COLOR, right_x, PANEL_RECT.top + 14)
-        objective = "Avoid spiders, collect loot, and find the legendary JD bottle."
+        objective = f"Avoid spiders, collect loot, and find the legendary {BOTTLE_NAME}."
         for index, line in enumerate(wrap_text(objective, text_font, PANEL_RECT.right - 40 - right_x)):
             self._add_text(text_font, line, TEXT_COLOR, right_x, PANEL_RECT.top + 46 + index * 28)
 

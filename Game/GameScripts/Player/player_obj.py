@@ -1,10 +1,28 @@
 import pygame
 from settings import (
     PLAYER_SPEED, INVULNERABLE_MS, BLINK_MS,
-    KNOCKBACK_DISTANCE, KNOCKBACK_SECONDS,
+    KNOCKBACK_DISTANCE, KNOCKBACK_SECONDS, PLAYER_SCALE,
 )
 from GameScripts.health import LifeLine
 from GameScripts.sprite_cache import load as load_sprite
+
+# Enlarged copies of the ant's pictures, kept by file path. The shared sprite
+# cache is not changed, so other code that loads the same files is unaffected.
+_scaled_frames = {}
+
+
+def load_player_frame(path):
+    """The ant's picture for `path`, enlarged by PLAYER_SCALE (done only once)."""
+    if path not in _scaled_frames:
+        image = load_sprite(path)
+        size = (
+            round(image.get_width() * PLAYER_SCALE),
+            round(image.get_height() * PLAYER_SCALE),
+        )
+        # scale() copies the pixels without blurring, so pixel art stays crisp.
+        _scaled_frames[path] = pygame.transform.scale(image, size)
+    return _scaled_frames[path]
+
 
 # How long (in milliseconds) each animation frame stays on screen before
 # switching to the next one. 100 ms = 10 animation frames per second.
@@ -29,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         # Load every frame ONCE here, not every frame in the main loop.
         # pygame.image.load() returns a Surface; convert_alpha() keeps the
         # transparent edges and makes blitting fast.
-        self.frames = [load_sprite(path) for path in self.animation]
+        self.frames = [load_player_frame(path) for path in self.animation]
         self.frame_index = 0
         # The time (in ms, from pygame.time.get_ticks()) we last switched frames.
         self.update_time = 0
@@ -265,7 +283,7 @@ class Player(pygame.sprite.Sprite):
         rounded view of it, so we re-centre the rect on self.pos rather than
         snapping self.pos back to the rounded rect.
         """
-        self.frames = [load_sprite(path) for path in paths]
+        self.frames = [load_player_frame(path) for path in paths]
         self.frame_index = 0
         self.update_time = 0
         self.image = self._current_image()

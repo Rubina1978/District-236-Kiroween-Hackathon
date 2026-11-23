@@ -53,10 +53,13 @@ DAMAGE_FLASH_SECONDS = 0.25
 # --- Menu (menu artwork and text only; none of this touches gameplay) ---
 # Placeholder title and story. Change the text here whenever you rename the game.
 GAME_TITLE = "POINT 236 (KOTA 236)"
+# What the bottle is called in the game text. Change it here and the menu,
+# help and victory screens all update.
+BOTTLE_NAME = "Ant Whiskey"
 MENU_STORY = (
     "The world has fallen into decay. Giant spiders roam the wasteland while "
     "the ant colonies struggle to survive. Legend speaks of a sacred bottle of "
-    "JD hidden beyond the ruins. Many ants have searched. None have returned."
+    f"{BOTTLE_NAME} hidden beyond the ruins. Many ants have searched. None have returned."
 )
 
 # Menu artwork files. Replace these two PNGs to change the pictures; no code
@@ -86,3 +89,13 @@ SPIDER_PERSONAL_SPACE = 100
 # (240), so spiders below that can be outrun; spiders above it cannot.
 SPIDER_SPEED_MIN = 150
 SPIDER_SPEED_MAX = 235
+
+# How much bigger the ant is drawn than its original picture (2 = double size).
+# Its collision box grows with it, because the box is built from the picture.
+PLAYER_SCALE = 2
+
+# --- Ending ---
+# The bottle picture shown when the chest opens and on the Victory screen.
+BOTTLE_IMAGE = "Assets/Artwork/Environment/Objects/Bottle/AntWhiskey.png"
+# Seconds the chest-opening moment lasts before the Victory screen appears.
+BOTTLE_REVEAL_SECONDS = 2.5

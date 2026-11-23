@@ -9,6 +9,7 @@ from GameScripts.UI.display_rewards import RewardPopup
 from GameScripts.UI.damage_flash import DamageFlash
 from GameScripts.game_state import GameState, GameStateManager
 from GameScripts.UI.main_menu import MainMenu
+from GameScripts.EndGame.bottle_reveal import BottleReveal
 from GameScripts.UI.screens import (
     make_help_screen, make_credits_screen,
     make_game_over_screen, make_victory_screen,
@@ -336,6 +337,9 @@ async def main():
     }
 
     music_rect = music_icon.get_rect(topleft=(20, 600))
+
+    # The ending: the chest opens and the bottle floats up (see bottle_reveal.py).
+    bottle_reveal = BottleReveal()
     # -------------------------------------------------------------------------------------------
     # Main game engine loop
     # -------------------------------------------------------------------------------------------
@@ -365,6 +369,7 @@ async def main():
                 (player, shooting, reward_popup, damage_flash,
                 camera_group, boundaries, boxes, whiskey_found) = start_new_game()
                 clock.tick()  # ignore the time spent building, so the first dt is small
+                bottle_reveal.reset()
                 state_manager.change_to(GameState.PLAYING)
                 continue
             elif action == "help":
@@ -483,7 +488,10 @@ async def main():
         # check_collision returns the reward string when a fresh box is opened.
         # Pass it to the popup so the icon appears in the corner.
         if reward == "whiskey":
-            whiskey_found = True
+            # Do not win at once: open the chest and show the bottle first.
+            chest = next((b for b in boxes if b.artwork != b.type), None)
+            if chest is not None and not bottle_reveal.active:
+                bottle_reveal.start(chest.rect)
         
         elif reward:
                 if not music_muted:
@@ -505,12 +513,15 @@ async def main():
         player.update_animation()
 
         # Spawn enemies
-        camera_group.spawn_enemy()
+        # Spiders freeze while the bottle is shown.
+        if not bottle_reveal.active:
+            camera_group.spawn_enemy()
 
         # Update enemies
         for spider in camera_group.enemy_pool.get_activated_enemies():
             if not spider.dying:
-                spider.move(dt, player)
+                if not bottle_reveal.active:
+                    spider.move(dt, player)
             spider.update_animation()
 
         # A spider bit the ant this frame: start the red flash, then clear the flag.
@@ -531,6 +542,13 @@ async def main():
         player_pos.normalize()
         for bullet in shooting.bullets:
             bullet.draw(screen, camera_group.get_camera().offset)
+
+        # The bottle floating out of the chest (drawn over the world). When the
+        # moment is over, whiskey_found makes the next frame show Victory.
+        bottle_reveal.update()
+        bottle_reveal.draw(screen, camera_group.get_camera().offset)
+        if bottle_reveal.finished:
+            whiskey_found = True
 
         # Return fully-dead spiders to the pool so they can be reused.
         camera_group.enemy_pool.check_dead()
