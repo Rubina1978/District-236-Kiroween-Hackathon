@@ -29,6 +29,9 @@ async def main():
     pygame.init()
 
     music_muted = False
+    # Milliseconds between attempts to start the next music track (see the loop).
+    MUSIC_RETRY_MS = 3000
+    last_music_try_ms = 0
     whiskey_found = False
     best_score = 0
     score = Score()
@@ -350,7 +353,14 @@ async def main():
 
         await asyncio.sleep(1 / (FPS * 2))
 
-        if not music_muted and not pygame.mixer.music.get_busy():
+        # When a track ends, start another. Try at most once every few seconds:
+        # in a web browser music cannot start until the player clicks, so
+        # without this wait the game would reload a music file on every frame
+        # and freeze.
+        now_ms = pygame.time.get_ticks()
+        if (not music_muted and not pygame.mixer.music.get_busy()
+                and now_ms - last_music_try_ms > MUSIC_RETRY_MS):
+            last_music_try_ms = now_ms
             CurrentTrack = random.choice(MusicTracks)
             pygame.mixer.music.load(CurrentTrack)
             pygame.mixer.music.play()

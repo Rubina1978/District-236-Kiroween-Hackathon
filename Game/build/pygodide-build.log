@@ -1,11 +1,11 @@
 Pygodide build log
-Started: 2026-11-23T11:31:35.318310+00:00
+Started: 2026-11-26T22:17:21.063249+00:00
 Pygodide version: 0.1.0
-Python: 3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]
-Platform: Windows-10-10.0.19045-SP0
-Working directory: C:\Users\Dylan\Desktop\KiroProjects\Kiroween\Kota-256-Kiroween-Hackathon\Game
-Source directory: C:\Users\Dylan\Desktop\KiroProjects\Kiroween\Kota-256-Kiroween-Hackathon\Game
-Output directory: C:\Users\Dylan\Desktop\KiroProjects\Kiroween\Kota-256-Kiroween-Hackathon\Game\build
+Python: 3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]
+Platform: Windows-11-10.0.26300-SP0
+Working directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game
+Source directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game
+Output directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game\build
 Serve after build: False
 CLI app override: (none)
 CLI dependencies: (none)
@@ -14,11 +14,11 @@ CLI canvas-height: 720
 Auto-async: True
 
 Build output:
-Building C:\Users\Dylan\Desktop\KiroProjects\Kiroween\Kota-256-Kiroween-Hackathon\Game
+Building C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game
 App entrypoint: main:main (default)
 Canvas aspect: not found (using default 800x600; could not resolve set_mode size)
 Canvas: fit 1280x720 (max in viewport, aspect preserved)
-Package files: 233 (auto-discovery)
+Package files: 234 (auto-discovery)
 Dependency sources:
   - [project].dependencies: pygame-ce
 Resolved dependencies: pygame-ce
@@ -26,8 +26,8 @@ Install strategy:
   - pyodide.loadPackage: pygame-ce
   - micropip.install: (none)
 Auto async: already async (main:main)
-App archive: app.zip (233 files)
+App archive: app.zip (234 files)
 Favicon: bundled default
 
 Result: success
-Finished: 2026-11-23T11:31:36.754554+00:00
+Finished: 2026-11-26T22:17:22.760038+00:00
