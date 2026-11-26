@@ -2,6 +2,22 @@
 # All shared constants live here so magic numbers don't get scattered
 # across the game. Import what you need, e.g.:
 #     from settings import SCREEN_WIDTH, TILE_SIZE
+import sys
+
+# True when the game runs in a web browser (the website version). Browsers are
+# much slower than a computer at building the map, so the web version uses a
+# smaller map and simpler music handling.
+RUNNING_ON_WEB = sys.platform == "emscripten"
+
+# Map size, counted in grid cells (rows, columns). The ground grid has twice as
+# many cells as the objects grid because ground tiles are half the size, so the
+# two always cover the same area. The ant starts near the middle-top of the map.
+if RUNNING_ON_WEB:
+    GROUND_ROWS, GROUND_COLS = 72, 128      # about 9,200 ground tiles
+    OBJECT_ROWS, OBJECT_COLS = 36, 62       # trees, rocks, bushes and boxes
+else:
+    GROUND_ROWS, GROUND_COLS = 144, 256     # about 36,900 ground tiles
+    OBJECT_ROWS, OBJECT_COLS = 72, 124
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720

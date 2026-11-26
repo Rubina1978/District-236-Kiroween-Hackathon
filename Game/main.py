@@ -15,7 +15,7 @@ from GameScripts.UI.screens import (
     make_game_over_screen, make_victory_screen,
 )
 from GameScripts.score import Score
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR, GAME_TITLE
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR, GAME_TITLE, RUNNING_ON_WEB
 import random
 import asyncio
 
@@ -46,7 +46,9 @@ async def main():
     CurrentTrack = random.choice(MusicTracks)
 
     pygame.mixer.music.load(CurrentTrack)
-    pygame.mixer.music.play()
+    # On the website, one track loops forever (-1), so no music file is ever
+    # loaded again while playing. On the computer, tracks change (see the loop).
+    pygame.mixer.music.play(-1 if RUNNING_ON_WEB else 0)
 
     # Walk sound effects
     walk1 = pygame.mixer.Sound("Assets/Audio/SoundFX/Run/Fantozzi-StoneL1.ogg")
@@ -358,7 +360,8 @@ async def main():
         # without this wait the game would reload a music file on every frame
         # and freeze.
         now_ms = pygame.time.get_ticks()
-        if (not music_muted and not pygame.mixer.music.get_busy()
+        if (not RUNNING_ON_WEB
+                and not music_muted and not pygame.mixer.music.get_busy()
                 and now_ms - last_music_try_ms > MUSIC_RETRY_MS):
             last_music_try_ms = now_ms
             CurrentTrack = random.choice(MusicTracks)
