@@ -16,10 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # Job 1: collect the website files and upload them as the "github-pages" artifact.
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -27,8 +25,6 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Prepare site files
         run: |
@@ -43,6 +39,15 @@ jobs:
         with:
           path: _site
 
+  # Job 2: publish it. It runs only after job 1 has finished, so the artifact
+  # is fully saved before the deploy step looks for it.
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
