@@ -1,9 +1,9 @@
 Pygodide build log
-Started: 2026-11-26T22:17:21.063249+00:00
+Started: 2026-11-26T22:42:12.303688+00:00
 Pygodide version: 0.1.0
 Python: 3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]
 Platform: Windows-11-10.0.26300-SP0
-Working directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game
+Working directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon
 Source directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game
 Output directory: C:\Users\rubes\OneDrive\Desktop\my coding projects\Kota256-Kiroween Hackathon\Game\build
 Serve after build: False
@@ -30,4 +30,4 @@ App archive: app.zip (234 files)
 Favicon: bundled default
 
 Result: success
-Finished: 2026-11-26T22:17:22.760038+00:00
+Finished: 2026-11-26T22:42:14.353935+00:00

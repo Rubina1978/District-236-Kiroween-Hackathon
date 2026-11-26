@@ -1,3 +1,4 @@
+import math
 import pygame
 from settings import (
     PLAYER_SPEED, INVULNERABLE_MS, BLINK_MS,
@@ -19,8 +20,19 @@ def load_player_frame(path):
             round(image.get_width() * PLAYER_SCALE),
             round(image.get_height() * PLAYER_SCALE),
         )
-        # scale() copies the pixels without blurring, so pixel art stays crisp.
-        _scaled_frames[path] = pygame.transform.scale(image, size)
+        if float(PLAYER_SCALE).is_integer():
+            # Whole numbers (2, 3...): copy the pixels without blurring, so
+            # pixel art stays crisp.
+            _scaled_frames[path] = pygame.transform.scale(image, size)
+        else:
+            # In-between sizes (like 1.5): first enlarge to the next whole
+            # number with crisp pixels, then shrink smoothly to the final size.
+            # This keeps the pixels even instead of some 1 wide and some 2 wide.
+            step = math.ceil(PLAYER_SCALE)
+            crisp = pygame.transform.scale(
+                image, (image.get_width() * step, image.get_height() * step)
+            )
+            _scaled_frames[path] = pygame.transform.smoothscale(crisp, size)
     return _scaled_frames[path]
 
 

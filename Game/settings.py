@@ -90,9 +90,12 @@ SPIDER_PERSONAL_SPACE = 100
 SPIDER_SPEED_MIN = 150
 SPIDER_SPEED_MAX = 235
 
-# How much bigger the ant is drawn than its original picture (2 = double size).
-# Its collision box grows with it, because the box is built from the picture.
-PLAYER_SCALE = 2
+# How much bigger the ant is drawn than its original picture. Any number works
+# (1 = original, 1.5 = half again, 2 = double). Its collision box grows with it,
+# because the box is built from the picture.
+# On screen at 1.5 the ant is about 48 px tall: taller than a spider (29) and a
+# box (36), a bit shorter than a rock (56), well below a tree (120-138).
+PLAYER_SCALE = 1.5
 
 # --- Ending ---
 # The bottle picture shown when the chest opens and on the Victory screen.
