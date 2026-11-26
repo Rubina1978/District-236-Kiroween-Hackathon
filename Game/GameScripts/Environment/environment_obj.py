@@ -4,6 +4,22 @@ from settings import ENV_SPRITE_SCALES, ENV_DEFAULT_SCALE
 from GameScripts.items import Items
 from GameScripts.sprite_cache import load as load_sprite
 
+# Enlarged pictures, made once per file and shared by every object that uses
+# that file. The map has about 37,000 ground tiles but only 3 grass pictures,
+# so this avoids making 37,000 copies (which froze the web version).
+_scaled_images = {}
+
+
+def _scaled_image(path, times):
+    """The picture at `path`, made 2x bigger `times` times (once per file)."""
+    key = (path, times)
+    if key not in _scaled_images:
+        image = load_sprite(path)
+        for _ in range(times):
+            image = pygame.transform.scale2x(image)
+        _scaled_images[key] = image
+    return _scaled_images[key]
+
 class EnvrionmentObject(pygame.sprite.Sprite):
     """A piece of the environment (tree, rock, bush, box) drawn on the map.
 
@@ -50,20 +66,12 @@ class EnvrionmentObject(pygame.sprite.Sprite):
         else:
             path = f"Assets/Artwork/Environment/Scenery/{self.type}.png"
 
-        self.image = load_sprite(path)
         # Double the size of every map sprite (trees, rocks, bushes, boxes).
         # scale2x is made for pixel art and makes the image exactly 2x bigger.
         # The player is loaded separately in player_obj.py, so it is unaffected.
-        if self.type == "tree":
-            self.image = pygame.transform.scale2x(self.image)
-            self.image = pygame.transform.scale2x(self.image)
-        elif self.type == "grass1" or self.type == "grass2" or self.type == "grass3":
-            self.image = pygame.transform.scale2x(self.image)
-        elif self.type == "rock":
-            self.image = pygame.transform.scale2x(self.image)
-            self.image = pygame.transform.scale2x(self.image)
-        else:
-            self.image = pygame.transform.scale2x(self.image)
+        # Trees and rocks are doubled twice (4x bigger).
+        times = 2 if self.type in ("tree", "rock") else 1
+        self.image = _scaled_image(path, times)
         # rect is where the sprite sits in the world. x, y come from its grid
         # cell (col * TILE_SIZE, row * TILE_SIZE).
         self.rect = self.image.get_rect(topleft=(x, y))
