@@ -416,9 +416,11 @@ async def main():
             state_manager.change_to(GameState.VICTORY)
             if score.return_points() > best_score:
                 best_score = score.return_points()
-                score.reset_points()
+            score.reset_points()
 
         if player.lifeline.is_dead():
+            if score.return_points() > best_score:
+                best_score = score.return_points()
             score.reset_points()
             game_over_screen.set_backdrop(screen)
             state_manager.change_to(GameState.GAME_OVER)
