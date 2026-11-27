@@ -317,6 +317,11 @@ async def main():
 
         return player, shooting, reward_popup, damage_flash, camera_group, boundaries, boxes, whiskey_found
 
+    def leave_to_website():
+        """if game is played on the website and player click quick game in game menu, the screen goes back to the game website"""
+        import js
+ 
+        js.eval("window.close(); setTimeout(function () { window.location.href = '../../'; }, 300);")
 
     def draw_loading(screen):
         """Show a message while the world is built (it takes a moment)."""
@@ -394,8 +399,12 @@ async def main():
                 if state_manager.current in (GameState.GAME_OVER, GameState.VICTORY):
                     main_menu.replay_characters()
                 state_manager.change_to(GameState.MAIN_MENU)
+                
             elif action == "quit":
-                running = False
+                if RUNNING_ON_WEB:
+                    leave_to_website()
+                else:
+                    running = False
 
             menu_screens[state_manager.current].update(dt)
             menu_screens[state_manager.current].draw(screen)
