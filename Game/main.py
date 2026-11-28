@@ -14,7 +14,7 @@ from GameScripts.UI.screens import (
     make_help_screen, make_credits_screen,
     make_game_over_screen, make_victory_screen,
 )
-from GameScripts.score import Score
+from GameScripts.score import Score, load_best_score, save_best_score
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR, GAME_TITLE, RUNNING_ON_WEB
 import random
 import asyncio
@@ -33,7 +33,7 @@ async def main():
     MUSIC_RETRY_MS = 3000
     last_music_try_ms = 0
     whiskey_found = False
-    best_score = 0
+    best_score = load_best_score()
     score = Score()
     perma_multiplier = 0
 
@@ -416,11 +416,13 @@ async def main():
             state_manager.change_to(GameState.VICTORY)
             if score.return_points() > best_score:
                 best_score = score.return_points()
+                save_best_score(best_score)
             score.reset_points()
 
         if player.lifeline.is_dead():
             if score.return_points() > best_score:
                 best_score = score.return_points()
+                save_best_score(best_score)
             score.reset_points()
             game_over_screen.set_backdrop(screen)
             state_manager.change_to(GameState.GAME_OVER)
